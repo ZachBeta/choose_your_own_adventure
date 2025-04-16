@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "main": "src/index.ts",
   "scripts": {},
-  "dependencies": {},
-  "devDependencies": {}
+  "dependencies": {
+    "node-fetch": "^2.7.0",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.1",
+    "@types/node-fetch": "^2.6.12"
+  }
 }

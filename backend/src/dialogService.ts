@@ -8,20 +8,21 @@ export class DialogService {
   }
 
   async startScene({ playerId, sceneId }: { playerId: string; sceneId: string }) {
-    const prompt = `You are Joy and Fear from Inside Out. The player is starting scene "${sceneId}". Give a short, vivid monologue and two thought cabinet lines.`;
+    const prompt = `You are an AI game master.\nGiven the following scene context, respond in strict JSON with these fields:\n- monologue: a short, vivid description of the scene\n- thoughtCabinet: an array of objects, each with 'part' (Joy, Fear, etc.) and 'text'\n- dialog: an array of dialog options, each with 'id', 'text', and optional 'skillCheck' (with 'part' and 'dc')\n\nScene context:\nPlayer has just entered scene \"${sceneId}\".\n\nRespond ONLY with valid JSON, no explanation or extra text. Example:\n{\n  \"monologue\": \"...\",\n  \"thoughtCabinet\": [\n    { \"part\": \"Joy\", \"text\": \"...\" }\n  ],\n  \"dialog\": [\n    { \"id\": \"opt1\", \"text\": \"...\", \"skillCheck\": { \"part\": \"Joy\", \"dc\": 10 } }\n  ]\n}`;
     const llmText = await this.llm.generate(prompt);
-
-    // For demo, just return the LLM output as monologue and stub the rest
+    let structured;
+    try {
+      console.log('LLM response:', llmText);
+      // Try to extract JSON block if LLM returns extra text
+      const match = llmText.match(/\{[\s\S]*\}/);
+      structured = JSON.parse(match ? match[0] : llmText);
+    } catch (e) {
+      throw new Error('LLM did not return valid JSON');
+    }
     return {
-      monologue: llmText,
-      thoughtCabinet: [
-        { part: 'Joy', text: "Let's get started!" },
-        { part: 'Fear', text: 'What if something goes wrong?' }
-      ],
-      dialog: [
-        { id: 'opt1', text: 'Say hello.', skillCheck: { part: 'Joy', dc: 10 } },
-        { id: 'opt2', text: 'Look around.' }
-      ],
+      monologue: structured.monologue,
+      thoughtCabinet: structured.thoughtCabinet,
+      dialog: structured.dialog,
       llmLines: [llmText]
     };
   }

@@ -3,15 +3,19 @@ import { DialogService } from '../src/dialogService';
 
 describe('DialogService', () => {
   it('returns a valid scene response when starting a scene', async () => {
+    const { LLMClient } = await import('../src/llmClient');
     const dialogService = new DialogService({
-      llm: { generate: async () => 'LLM says hello!' }
+      llm: new LLMClient()
     });
     const req = { playerId: 'player1', sceneId: 'scene_intro' };
     const res = await dialogService.startScene(req);
 
-    expect(res).toHaveProperty('monologue');
+    expect(typeof res.monologue).toBe('string');
     expect(Array.isArray(res.thoughtCabinet)).toBe(true);
     expect(Array.isArray(res.dialog)).toBe(true);
-    expect(res.llmLines).toContain('LLM says hello!');
-  });
+    expect(Array.isArray(res.llmLines)).toBe(true);
+    // Optionally, check structure of one dialog option
+    expect(res.dialog[0]).toHaveProperty('id');
+    expect(res.dialog[0]).toHaveProperty('text');
+  }, 60000);
 });

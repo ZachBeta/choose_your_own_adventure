@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { DialogService } from '../src/dialogService';
+import { LLMClient } from '../src/llmClient';
 
 describe('DialogService', () => {
   it('returns a valid scene response when starting a scene', async () => {
-    const { LLMClient } = await import('../src/llmClient');
     const dialogService = new DialogService({
       llm: new LLMClient()
     });
@@ -20,7 +20,6 @@ describe('DialogService', () => {
   }, 60000);
 
   it('handles a multi-turn happy path dialogue with memory', async () => {
-    const { LLMClient } = await import('../src/llmClient');
     const dialogService = new DialogService({
       llm: new LLMClient()
     });

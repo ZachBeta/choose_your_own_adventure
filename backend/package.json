@@ -3,15 +3,24 @@
   "version": "0.1.0",
   "main": "src/index.ts",
   "scripts": {
+    "start": "ts-node src/index.ts",
+    "play": "ts-node bin/cli.ts",
     "test": "vitest"
   },
   "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
     "node-fetch": "^2.7.0",
     "typescript": "^5.8.3"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
     "@types/node": "^22.14.1",
     "@types/node-fetch": "^2.6.12",
+    "@types/prompt-sync": "^4.2.3",
+    "prompt-sync": "^4.2.0",
+    "ts-node": "^10.9.2",
     "vitest": "^0.25.3"
   }
 }

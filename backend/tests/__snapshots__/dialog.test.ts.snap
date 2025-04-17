@@ -1,0 +1,210 @@
+// Vitest Snapshot v1
+
+exports[`DialogService > handles a multi-turn happy path dialogue with memory > chooseOption-no-skill 1`] = `
+{
+  "dialog": [
+    {
+      "id": "opt2",
+      "text": "Follow the path deeper into the forest.",
+    },
+    {
+      "id": "opt3",
+      "skillCheck": {
+        "dc": 12,
+        "part": "Perception Check",
+      },
+      "text": "Examine the base of the nearest tree for clues.",
+    },
+    {
+      "id": "opt4",
+      "skillCheck": {
+        "dc": 10,
+        "part": "Perception Check",
+      },
+      "text": "Listen intently for the source of the rustling.",
+    },
+    {
+      "id": "opt5",
+      "text": "Turn back and retrace your steps.",
+    },
+  ],
+  "monologue": "The air hangs thick and humid, smelling of damp earth and something vaguely floral, yet unsettling. Towering trees, their branches interwoven like skeletal fingers, blot out most of the sky. A narrow, overgrown path winds ahead, disappearing into the gloom. You hear the drip, drip, drip of water, and a rustling in the undergrowth that could be anything.",
+  "skillCheckResult": null,
+  "thoughtCabinet": [
+    {
+      "part": "Environment",
+      "text": "The forest feels ancient and watchful. There's a sense of being observed, though you can't pinpoint the source.",
+    },
+    {
+      "part": "Sound",
+      "text": "The dripping water is rhythmic, almost hypnotic. The rustling is sporadic and difficult to place.",
+    },
+    {
+      "part": "Feeling",
+      "text": "A prickle of unease runs down your spine. This place doesn't feel welcoming.",
+    },
+  ],
+}
+`;
+
+exports[`DialogService > handles a multi-turn happy path dialogue with memory > chooseOption-skill 1`] = `
+{
+  "dialog": [
+    {
+      "id": "opt1",
+      "text": "Examine the locket closely.",
+    },
+    {
+      "id": "opt2",
+      "text": "Search the chamber for other exits or clues.",
+    },
+    {
+      "id": "opt3",
+      "text": "Touch the phosphorescent moss.",
+    },
+    {
+      "id": "opt4",
+      "text": "Leave the chamber and return to the previous hallway.",
+    },
+  ],
+  "monologue": "The heavy oak door creaks open, revealing a circular chamber bathed in the eerie green glow of phosphorescent moss clinging to the damp stone walls. A single, ornate pedestal stands in the center, upon which rests a tarnished silver locket. The air hangs thick with the scent of mildew and something subtly… metallic.",
+  "skillCheckResult": null,
+  "thoughtCabinet": [
+    {
+      "part": "Environment",
+      "text": "The moss is unusually bright, almost pulsating. It seems to be the only source of light.",
+    },
+    {
+      "part": "Object",
+      "text": "The locket is intricately carved with scenes of what appear to be celestial events – constellations and eclipses.",
+    },
+    {
+      "part": "Scent",
+      "text": "That metallic smell... could it be blood? Or something else entirely?",
+    },
+  ],
+}
+`;
+
+exports[`DialogService > handles a multi-turn happy path dialogue with memory > playerState 1`] = `
+{
+  "history": [
+    {
+      "optionId": "opt1",
+      "result": null,
+    },
+    {
+      "optionId": "opt1",
+      "result": null,
+    },
+  ],
+}
+`;
+
+exports[`DialogService > handles a multi-turn happy path dialogue with memory > startScene 1`] = `
+{
+  "dialog": [
+    {
+      "id": "opt1",
+      "skillCheck": {
+        "dc": 12,
+        "part": "Perception",
+      },
+      "text": "Approach the hooded figure.",
+    },
+    {
+      "id": "opt2",
+      "skillCheck": {
+        "dc": 8,
+        "part": "Insight",
+      },
+      "text": "Browse the stalls, starting with the potion vendor.",
+    },
+    {
+      "id": "opt3",
+      "skillCheck": {
+        "dc": 10,
+        "part": "Diplomacy",
+      },
+      "text": "Ask a nearby merchant for directions.",
+    },
+    {
+      "id": "opt4",
+      "skillCheck": {
+        "dc": 15,
+        "part": "Awareness",
+      },
+      "text": "Observe the crowd, trying to get a sense of the market's atmosphere.",
+    },
+  ],
+  "monologue": "The air hangs thick and humid as you step into the Whispering Market. Stalls overflow with strange wares – shimmering fabrics, bubbling potions, and cages filled with chittering, unidentifiable creatures. A cacophony of voices rises around you, a blend of bartering, gossip, and the occasional shriek. The cobblestone path is slick with moisture, reflecting the flickering light of oil lamps that cast long, dancing shadows. A hooded figure watches you from across the square, their face obscured.",
+  "thoughtCabinet": [
+    {
+      "part": "Curiosity",
+      "text": "So many strange things... what should I look at first?",
+    },
+    {
+      "part": "Caution",
+      "text": "That figure... they seem to be observing me. Should I be worried?",
+    },
+    {
+      "part": "Apprehension",
+      "text": "The air feels heavy, almost oppressive. Something isn't quite right.",
+    },
+  ],
+}
+`;
+
+exports[`DialogService > returns a valid scene response when starting a scene 1`] = `
+{
+  "dialog": [
+    {
+      "id": "opt1",
+      "skillCheck": {
+        "dc": 12,
+        "part": "Perception",
+      },
+      "text": "Approach the hooded figure.",
+    },
+    {
+      "id": "opt2",
+      "skillCheck": {
+        "dc": 8,
+        "part": "Insight",
+      },
+      "text": "Browse the stalls, starting with the potion vendor.",
+    },
+    {
+      "id": "opt3",
+      "skillCheck": {
+        "dc": 10,
+        "part": "Diplomacy",
+      },
+      "text": "Ask a nearby merchant for directions.",
+    },
+    {
+      "id": "opt4",
+      "skillCheck": {
+        "dc": 15,
+        "part": "Awareness",
+      },
+      "text": "Observe the crowd, trying to get a sense of the market's atmosphere.",
+    },
+  ],
+  "monologue": "The air hangs thick and humid as you step into the Whispering Market. Stalls overflow with strange wares – shimmering fabrics, bubbling potions, and cages filled with chittering, unidentifiable creatures. A cacophony of voices rises around you, a blend of bartering, gossip, and the occasional shriek. The cobblestone path is slick with moisture, reflecting the flickering light of oil lamps that cast long, dancing shadows. A hooded figure watches you from across the square, their face obscured.",
+  "thoughtCabinet": [
+    {
+      "part": "Curiosity",
+      "text": "So many strange things... what should I look at first?",
+    },
+    {
+      "part": "Caution",
+      "text": "That figure... they seem to be observing me. Should I be worried?",
+    },
+    {
+      "part": "Apprehension",
+      "text": "The air feels heavy, almost oppressive. Something isn't quite right.",
+    },
+  ],
+}
+`;

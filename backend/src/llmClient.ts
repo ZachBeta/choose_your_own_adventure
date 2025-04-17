@@ -33,11 +33,13 @@ export class LLMClient {
       ? JSON.stringify({
           model: this.model,
           messages: [{ role: 'user', content: prompt }],
+          temperature: 0
         })
       : JSON.stringify({
           model: this.model,
           prompt,
           stream: false,
+          temperature: 0
         });
     const res = await fetch(this.endpoint, {
       method: 'POST',

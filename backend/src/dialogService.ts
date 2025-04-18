@@ -22,17 +22,22 @@ export class DialogService {
       this.playerStates.get(playerId)!.promptPrefix = prefix;
     }
 
-    const prompt = `You are an AI game master with ${prefix}.\nGiven the following scene context, respond in strict JSON with these fields:\n- monologue: a short, vivid description of the scene\n- thoughtCabinet: an array of objects, each with 'part' (Joy, Fear, etc.) and 'text'\n- dialog: an array of dialog options, each with 'id', 'text', and optional 'skillCheck' (with 'part' and 'dc')\n\nScene context:\nPlayer has just entered scene "${sceneId}".\n\nRespond ONLY with valid JSON, no explanation or extra text. Example:\n{\n  "monologue": "...",\n  "thoughtCabinet": [\n    { "part": "Joy", "text": "..." }\n  ],\n  "dialog": [\n    { "id": "opt1", "text": "...", "skillCheck": { "part": "Joy", "dc": 10 } }\n  ]\n}`;
+    // Import the schema string generator and parser
+    // (at top of file, add:)
+    // import { getSceneResponseJsonSchemaString } from './getSceneResponseJsonSchemaString';
+    // import { parseLlmSceneResponse } from './parseLlmJson';
+    const schemaString = require('./getSceneResponseJsonSchemaString').getSceneResponseJsonSchemaString();
+    const prompt = `You are an AI game master with ${prefix}.
+Given the following scene context, respond ONLY in valid JSON matching this schema:
+
+${schemaString}
+
+Scene context:
+Player has just entered scene "${sceneId}".
+
+Do not include any explanation or extra text. Only output valid JSON.`;
     const llmText = await this.llm.generate(prompt);
-    let structured;
-    try {
-      // console.log('LLM response:', llmText);
-      // Try to extract JSON block if LLM returns extra text
-      const match = llmText.match(/\{[\s\S]*\}/);
-      structured = JSON.parse(match ? match[0] : llmText);
-    } catch (e) {
-      throw new Error('LLM did not return valid JSON');
-    }
+    const structured = require('./parseLlmJson').parseLlmSceneResponse(llmText);
     return {
       monologue: structured.monologue,
       thoughtCabinet: structured.thoughtCabinet,
@@ -46,17 +51,10 @@ export class DialogService {
     if (!state) throw new Error(`Unknown player ${playerId}`);
     const prefix = state.promptPrefix;
 
-    const prompt = `You are an AI game master with ${prefix}. The player history: ${JSON.stringify(state.history)}. The player chose option "${optionId}". Respond in strict JSON with these fields:`;
+    const schemaString = require('./getSceneResponseJsonSchemaString').getSceneResponseJsonSchemaString();
+    const prompt = `You are an AI game master with ${prefix}. The player history: ${JSON.stringify(state.history)}. The player chose option "${optionId}". Respond ONLY in valid JSON matching this schema:\n\n${schemaString}\n\nDo not include any explanation or extra text. Only output valid JSON.`;
     const llmText = await this.llm.generate(prompt);
-    // extract raw JSON string
-    const jsonMatch = llmText.match(/\{[\s\S]*\}/);
-    const jsonString = jsonMatch ? jsonMatch[0] : llmText;
-    let structured: any;
-    try {
-      structured = JSON.parse(jsonString);
-    } catch (e) {
-      throw new Error('LLM did not return valid JSON for chooseOption');
-    }
+    const structured = require('./parseLlmJson').parseLlmSceneResponse(llmText);
     // update history
     state.history.push({ optionId, result: structured.skillCheckResult });
     return {
@@ -64,7 +62,7 @@ export class DialogService {
       thoughtCabinet: structured.thoughtCabinet,
       dialog: structured.dialog,
       skillCheckResult: structured.skillCheckResult ?? undefined,
-      llmLines: [jsonString]
+      llmLines: [llmText]
     };
   }
 

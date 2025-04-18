@@ -29,6 +29,7 @@ export class LLMClient {
   }
 
   async generate(prompt: string): Promise<string> {
+    console.log(">>> prompt:", prompt);
     const body = OPENROUTER_API_KEY
       ? JSON.stringify({
           model: this.model,
@@ -47,6 +48,7 @@ export class LLMClient {
       body,
     });
 
+    console.log("<<< response status:", res.status);
     if (!res.ok) throw new Error(`LLM error: ${res.statusText}`);
     const data = await res.json();
     if (OPENROUTER_API_KEY) {

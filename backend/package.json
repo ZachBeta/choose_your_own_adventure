@@ -10,8 +10,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.21.2",
-    "node-fetch": "^2.7.0",
-    "typescript": "^5.8.3"
+    "node-fetch": "^2.7.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
@@ -21,6 +20,7 @@
     "@types/prompt-sync": "^4.2.3",
     "prompt-sync": "^4.2.0",
     "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
     "vitest": "^0.25.3"
   }
 }

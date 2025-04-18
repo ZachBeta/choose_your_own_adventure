@@ -1,0 +1,316 @@
+>>> RESPONSE: {
+  "monologue": "The air hangs thick with the scent of synthetic sweat and desperation. Neon bleeds from the arcade machines, painting the faces of the patrons in sickly hues. This... this is Mario Party. A den of flickering screens and shattered dreams. The music, a relentless loop of digitized jingles, grates on the nerves. You feel a familiar ache in your temples, a prelude to the inevitable cognitive dissonance. Someone's weeping softly in the corner, clutching a handful of credits.",
+  "thoughtCabinet": [
+    {
+      "part": "Logic",
+      "text": "This place feels wrong. Too… cheerful. Like a predator disguising itself in confetti and pixelated plumbers."
+    },
+    {
+      "part": "Empathy",
+      "text": "That weeping figure… they lost something. More than just credits, I suspect."
+    },
+    {
+      "part": "Authority",
+      "text": "I'm here for a reason. Focus. Don't get lost in the sensory overload."
+    }
+  ],
+  "dialog": [
+    {
+      "id": "bartender_greeting",
+      "text": "The bartender, a hulking figure with chrome implants woven into his scalp, barely glances up. 'What'll it be, detective? Synthetic whiskey? Neuro-stimulants? Or just another night of watching people waste their lives?'",
+      "skillCheck": {
+        "part": "Authority - Intimidation",
+        "dc": 12
+      }
+    },
+    {
+      "id": "nearby_player",
+      "text": "A young woman, face illuminated by a racing game, mutters to herself, 'Just one more level… just one more…'",
+      "skillCheck": {
+        "part": "Perception - Observation",
+        "dc": 8
+      }
+    }
+  ],
+  "llmLines": [
+    "```json\n{\n  \"monologue\": \"The air hangs thick with the scent of synthetic sweat and desperation. Neon bleeds from the arcade machines, painting the faces of the patrons in sickly hues. This... this is Mario Party. A den of flickering screens and shattered dreams. The music, a relentless loop of digitized jingles, grates on the nerves. You feel a familiar ache in your temples, a prelude to the inevitable cognitive dissonance. Someone's weeping softly in the corner, clutching a handful of credits.\",\n  \"thoughtCabinet\": [\n    {\n      \"part\": \"Logic\",\n      \"text\": \"This place feels wrong. Too… cheerful. Like a predator disguising itself in confetti and pixelated plumbers.\"\n    },\n    {\n      \"part\": \"Empathy\",\n      \"text\": \"That weeping figure… they lost something. More than just credits, I suspect.\"\n    },\n    {\n      \"part\": \"Authority\",\n      \"text\": \"I'm here for a reason. Focus. Don't get lost in the sensory overload.\"\n    }\n  ],\n  \"dialog\": [\n    {\n      \"id\": \"bartender_greeting\",\n      \"text\": \"The bartender, a hulking figure with chrome implants woven into his scalp, barely glances up. 'What'll it be, detective? Synthetic whiskey? Neuro-stimulants? Or just another night of watching people waste their lives?'\",\n      \"skillCheck\": {\n        \"part\": \"Authority - Intimidation\",\n        \"dc\": 12\n      }\n    },\n    {\n      \"id\": \"nearby_player\",\n      \"text\": \"A young woman, face illuminated by a racing game, mutters to herself, 'Just one more level… just one more…'\",\n      \"skillCheck\": {\n        \"part\": \"Perception - Observation\",\n        \"dc\": 8\n      }\n    }\n  ],\n  \"skillCheckResult\": {}\n}\n```"
+  ]
+}
+>>> REQUEST: chooseOption {"playerId":"luigi","optionId":"bartender_greeting"}
+>>> RESPONSE: {
+  "monologue": "The rain outside is a greasy curtain, clinging to the neon signs of the 'Chrome Siren'. Inside, the air hangs thick with synth-smoke and regret. Behind the bar, a woman – they call her 'Silas' – polishes a glass with a practiced disinterest. Her face is a roadmap of hard living, etched with lines that speak of deals made and promises broken. She looks up, her eyes – the color of tarnished silver – assessing you with a weary cynicism. She doesn't smile. Doesn't need to.",
+  "thoughtCabinet": [
+    {
+      "part": "Logic",
+      "text": "This place... it feels like a pressure point. A nexus of information, and likely, trouble."
+    },
+    {
+      "part": "Empathy",
+      "text": "Silas. She's seen things. A lot of things. I wonder what keeps her here, behind this bar, serving the city's ghosts."
+    }
+  ],
+  "dialog": [
+    {
+      "id": "silas_greeting",
+      "text": "You look like you've lost something. Or are about to. What'll it be?",
+      "skillCheck": {
+        "part": "Authority",
+        "dc": 12
+      }
+    },
+    {
+      "id": "silas_question",
+      "text": "Don't just stand there staring. This ain't a museum.",
+      "skillCheck": {
+        "part": "Volition",
+        "dc": 8
+      }
+    }
+  ],
+  "llmLines": [
+    "```json\n{\n  \"monologue\": \"The rain outside is a greasy curtain, clinging to the neon signs of the 'Chrome Siren'. Inside, the air hangs thick with synth-smoke and regret. Behind the bar, a woman – they call her 'Silas' – polishes a glass with a practiced disinterest. Her face is a roadmap of hard living, etched with lines that speak of deals made and promises broken. She looks up, her eyes – the color of tarnished silver – assessing you with a weary cynicism. She doesn't smile. Doesn't need to.\",\n  \"thoughtCabinet\": [\n    {\n      \"part\": \"Logic\",\n      \"text\": \"This place... it feels like a pressure point. A nexus of information, and likely, trouble.\"\n    },\n    {\n      \"part\": \"Empathy\",\n      \"text\": \"Silas. She's seen things. A lot of things. I wonder what keeps her here, behind this bar, serving the city's ghosts.\"\n    }\n  ],\n  \"dialog\": [\n    {\n      \"id\": \"silas_greeting\",\n      \"text\": \"You look like you've lost something. Or are about to. What'll it be?\",\n      \"skillCheck\": {\n        \"part\": \"Authority\",\n        \"dc\": 12\n      }\n    },\n    {\n      \"id\": \"silas_question\",\n      \"text\": \"Don't just stand there staring. This ain't a museum.\",\n      \"skillCheck\": {\n        \"part\": \"Volition\",\n        \"dc\": 8\n      }\n    }\n  ]\n}\n```"
+  ]
+}
+>>> REQUEST: chooseOption {"playerId":"luigi","optionId":"silas_greeting"}
+>>> RESPONSE: {
+  "monologue": "The glass gleams under the flickering neon. Silas doesn't bother with pleasantries. Just a slow, deliberate wipe, the rag leaving a faint, oily sheen. \"You got a name, ghost? Or are you just another shadow drawn to the Siren's glow? Don't waste my time.\"",
+  "thoughtCabinet": [
+    {
+      "part": "Logic",
+      "text": "She's assessing my intentions. A professional. Probably seen it all before."
+    },
+    {
+      "part": "Empathy",
+      "text": "There's a weariness in her eyes that goes beyond just hard living. Something… lost."
+    }
+  ],
+  "dialog": [
+    {
+      "id": "silas_name",
+      "text": "My name's... (Your Name).",
+      "skillCheck": {
+        "part": "Volition",
+        "dc": 12
+      }
+    },
+    {
+      "id": "silas_business",
+      "text": "What's your business here?",
+      "skillCheck": {
+        "part": "Deception",
+        "dc": 15
+      }
+    },
+    {
+      "id": "silas_leave",
+      "text": "Never mind. I'll just be going.",
+      "skillCheck": {
+        "part": "Motorics",
+        "dc": 8
+      }
+    }
+  ],
+  "llmLines": [
+    "```json\n{\n  \"monologue\": \"The glass gleams under the flickering neon. Silas doesn't bother with pleasantries. Just a slow, deliberate wipe, the rag leaving a faint, oily sheen. \\\"You got a name, ghost? Or are you just another shadow drawn to the Siren's glow? Don't waste my time.\\\"\",\n  \"thoughtCabinet\": [\n    {\n      \"part\": \"Logic\",\n      \"text\": \"She's assessing my intentions. A professional. Probably seen it all before.\"\n    },\n    {\n      \"part\": \"Empathy\",\n      \"text\": \"There's a weariness in her eyes that goes beyond just hard living. Something… lost.\"\n    }\n  ],\n  \"dialog\": [\n    {\n      \"id\": \"silas_name\",\n      \"text\": \"My name's... (Your Name).\",\n      \"skillCheck\": {\n        \"part\": \"Volition\",\n        \"dc\": 12\n      }\n    },\n    {\n      \"id\": \"silas_business\",\n      \"text\": \"What's your business here?\",\n      \"skillCheck\": {\n        \"part\": \"Deception\",\n        \"dc\": 15\n      }\n    },\n    {\n      \"id\": \"silas_leave\",\n      \"text\": \"Never mind. I'll just be going.\",\n      \"skillCheck\": {\n        \"part\": \"Motorics\",\n        \"dc\": 8\n      }\n    }\n  ]\n}\n```"
+  ]
+}
+>>> REQUEST: chooseOption {"playerId":"luigi","optionId":"silas_name"}
+>>> RESPONSE: {
+  "monologue": "Silas's gaze sharpens, a flicker of something unreadable crossing her face. It vanishes as quickly as it appears, leaving behind the familiar mask of indifference. She sighs, a sound like air leaking from a punctured tire.",
+  "thoughtCabinet": [
+    {
+      "part": "Logic",
+      "text": "She's revealing something. A crack in the facade. But why?"
+    },
+    {
+      "part": "Empathy",
+      "text": "There's a weariness in her eyes that goes beyond just hard living. It's… resignation."
+    }
+  ],
+  "dialog": [
+    {
+      "id": "silas_name_response",
+      "text": "\"Name's Silas. Like the one who built this city, they say. Though I doubt he'd approve of the clientele. Yours?\"",
+      "skillCheck": {
+        "part": "Authority",
+        "dc": 12
+      }
+    }
+  ],
+  "llmLines": [
+    "```json\n{\n  \"monologue\": \"Silas's gaze sharpens, a flicker of something unreadable crossing her face. It vanishes as quickly as it appears, leaving behind the familiar mask of indifference. She sighs, a sound like air leaking from a punctured tire.\",\n  \"thoughtCabinet\": [\n    {\n      \"part\": \"Logic\",\n      \"text\": \"She's revealing something. A crack in the facade. But why?\"\n    },\n    {\n      \"part\": \"Empathy\",\n      \"text\": \"There's a weariness in her eyes that goes beyond just hard living. It's… resignation.\"\n    }\n  ],\n  \"dialog\": [\n    {\n      \"id\": \"silas_name_response\",\n      \"text\": \"\\\"Name's Silas. Like the one who built this city, they say. Though I doubt he'd approve of the clientele. Yours?\\\"\",\n      \"skillCheck\": {\n        \"part\": \"Authority\",\n        \"dc\": 12\n      }\n    }\n  ]\n}\n```"
+  ]
+}
+>>> REQUEST: chooseOption {"playerId":"luigi","optionId":"silas_name_response"}
+>>> RESPONSE: {
+  "monologue": "She studies you, a long, slow burn of appraisal. The kind that strips you bare, leaving you shivering in the neon glare. It's not hostility, not exactly. More like…disappointment. Like you've failed some unspoken test before you even knew it existed. Finally, she speaks, her voice a low rasp, like gravel shifting underfoot.",
+  "thoughtCabinet": [
+    {
+      "part": "Logic",
+      "text": "She's seen it all before. Every lost soul, every desperate gambler, every broken promise. You're just another statistic in her ledger."
+    },
+    {
+      "part": "Empathy",
+      "text": "There's a weariness in her eyes that goes deeper than just hard living. A profound sadness. What did she lose to earn this?"
+    }
+  ],
+  "dialog": [
+    {
+      "id": "silas_name_response_1",
+      "text": "“So, you’re…[Your Name]. Doesn’t exactly scream ‘hardboiled detective’ to me. More like ‘lost tourist.’ What brings you to the Chrome Siren, [Your Name]? Looking for trouble? Or running from it?”",
+      "skillCheck": {
+        "part": "Perception",
+        "dc": 12
+      }
+    }
+  ],
+  "llmLines": [
+    "```json\n{\n  \"monologue\": \"She studies you, a long, slow burn of appraisal. The kind that strips you bare, leaving you shivering in the neon glare. It's not hostility, not exactly. More like…disappointment. Like you've failed some unspoken test before you even knew it existed. Finally, she speaks, her voice a low rasp, like gravel shifting underfoot.\",\n  \"thoughtCabinet\": [\n    {\n      \"part\": \"Logic\",\n      \"text\": \"She's seen it all before. Every lost soul, every desperate gambler, every broken promise. You're just another statistic in her ledger.\"\n    },\n    {\n      \"part\": \"Empathy\",\n      \"text\": \"There's a weariness in her eyes that goes deeper than just hard living. A profound sadness. What did she lose to earn this?\"\n    }\n  ],\n  \"dialog\": [\n    {\n      \"id\": \"silas_name_response_1\",\n      \"text\": \"“So, you’re…[Your Name]. Doesn’t exactly scream ‘hardboiled detective’ to me. More like ‘lost tourist.’ What brings you to the Chrome Siren, [Your Name]? Looking for trouble? Or running from it?”\",\n      \"skillCheck\": {\n        \"part\": \"Perception\",\n        \"dc\": 12\n      }\n    }\n  ]\n}\n```"
+  ]
+}
+>>> REQUEST: chooseOption {"playerId":"luigi","optionId":"silas_name_response_1"}
+>>> RESPONSE: {
+  "monologue": "She doesn't smile. Doesn't even blink. Just…absorbs. Like a sponge soaking up the last dregs of your pathetic attempt at an introduction. The silence stretches, thick and oily, punctuated only by the hum of the neon signs bleeding through the grimy window. Then, a single word, delivered with the weight of a collapsing skyscraper.",
+  "thoughtCabinet": [
+    {
+      "part": "Logic",
+      "text": "She's assessing your value. Not as a person, but as a potential asset... or a liability. The disappointment wasn't directed *at* you, precisely. It was directed at the *potential* you failed to live up to."
+    },
+    {
+      "part": "Empathy",
+      "text": "There's a weariness in her eyes, a deep-seated exhaustion that suggests she's seen too much. This isn't about you. It's about the endless parade of broken things that stumble through her door."
+    }
+  ],
+  "dialog": [
+    {
+      "id": "silas_response_1",
+      "text": "\"Waste.\"",
+      "skillCheck": {
+        "part": "Volition",
+        "dc": 12
+      }
+    }
+  ],
+  "llmLines": [
+    "```json\n{\n  \"monologue\": \"She doesn't smile. Doesn't even blink. Just…absorbs. Like a sponge soaking up the last dregs of your pathetic attempt at an introduction. The silence stretches, thick and oily, punctuated only by the hum of the neon signs bleeding through the grimy window. Then, a single word, delivered with the weight of a collapsing skyscraper.\",\n  \"thoughtCabinet\": [\n    {\n      \"part\": \"Logic\",\n      \"text\": \"She's assessing your value. Not as a person, but as a potential asset... or a liability. The disappointment wasn't directed *at* you, precisely. It was directed at the *potential* you failed to live up to.\"\n    },\n    {\n      \"part\": \"Empathy\",\n      \"text\": \"There's a weariness in her eyes, a deep-seated exhaustion that suggests she's seen too much. This isn't about you. It's about the endless parade of broken things that stumble through her door.\"\n    }\n  ],\n  \"dialog\": [\n    {\n      \"id\": \"silas_response_1\",\n      \"text\": \"\\\"Waste.\\\"\",\n      \"skillCheck\": {\n        \"part\": \"Volition\",\n        \"dc\": 12\n      }\n    }\n  ]\n}\n```"
+  ]
+}
+>>> REQUEST: chooseOption {"playerId":"luigi","optionId":"silas_response_1"}
+>>> RESPONSE: {
+  "monologue": "“Waste of time,” she rasps, the words tasting like ash in the stale air. Her eyes, the color of chipped flint, don't linger. They slide past you, dismissing you as a glitch in the system, a stray data packet that needs to be purged. The silence returns, heavier now, laced with a palpable sense of…weariness. Like she’s seen it all before. Like you’re just another echo in a city full of them.",
+  "thoughtCabinet": [
+    {
+      "part": "Logic",
+      "text": "She's not exactly *wrong*. Your introduction was…lacking. A desperate attempt at charm in a place where charm is a liability."
+    },
+    {
+      "part": "Empathy",
+      "text": "There's a deep sadness behind that indifference. A weariness that suggests a long, hard road. But getting close to her…that's a fool's errand."
+    },
+    {
+      "part": "Inland Empire",
+      "text": "She smells of rain and regret. And something else…something metallic, like old blood and broken promises."
+    }
+  ],
+  "dialog": [
+    {
+      "id": "silas_question_1",
+      "text": "“What do you want?”",
+      "skillCheck": {
+        "part": "Volition",
+        "dc": 12
+      }
+    },
+    {
+      "id": "silas_question_2",
+      "text": "“And don’t waste my time with pleasantries.”",
+      "skillCheck": {
+        "part": "Composure",
+        "dc": 8
+      }
+    }
+  ],
+  "skillCheckResult": {},
+  "llmLines": [
+    "```json\n{\n  \"monologue\": \"“Waste of time,” she rasps, the words tasting like ash in the stale air. Her eyes, the color of chipped flint, don't linger. They slide past you, dismissing you as a glitch in the system, a stray data packet that needs to be purged. The silence returns, heavier now, laced with a palpable sense of…weariness. Like she’s seen it all before. Like you’re just another echo in a city full of them.\",\n  \"thoughtCabinet\": [\n    {\n      \"part\": \"Logic\",\n      \"text\": \"She's not exactly *wrong*. Your introduction was…lacking. A desperate attempt at charm in a place where charm is a liability.\"\n    },\n    {\n      \"part\": \"Empathy\",\n      \"text\": \"There's a deep sadness behind that indifference. A weariness that suggests a long, hard road. But getting close to her…that's a fool's errand.\"\n    },\n    {\n      \"part\": \"Inland Empire\",\n      \"text\": \"She smells of rain and regret. And something else…something metallic, like old blood and broken promises.\"\n    }\n  ],\n  \"dialog\": [\n    {\n      \"id\": \"silas_question_1\",\n      \"text\": \"“What do you want?”\",\n      \"skillCheck\": {\n        \"part\": \"Volition\",\n        \"dc\": 12\n      }\n    },\n    {\n      \"id\": \"silas_question_2\",\n      \"text\": \"“And don’t waste my time with pleasantries.”\",\n      \"skillCheck\": {\n        \"part\": \"Composure\",\n        \"dc\": 8\n      }\n    }\n  ],\n  \"skillCheckResult\": {}\n}\n```"
+  ]
+}
+>>> REQUEST: chooseOption {"playerId":"luigi","optionId":"silas_question_1"}
+>>> RESPONSE: {
+  "monologue": "She regards your question with the same glacial indifference she’s displayed thus far. A flicker, almost imperceptible, crosses her face – something akin to…amusement? No. More like the brief, cold spark of a faulty circuit. She exhales, a plume of vapor momentarily obscuring the harsh neon light reflecting in her eyes. \"Questions,\" she says, her voice a low, dry rustle, \"are for the curious. And you, detective…you reek of desperation, not curiosity.\"",
+  "thoughtCabinet": [
+    {
+      "part": "Logic",
+      "text": "She's right, isn't she? This isn't about genuine inquiry. It's about grasping at straws, trying to force a connection where there is none."
+    },
+    {
+      "part": "Empathy",
+      "text": "There's a profound sadness behind her detachment. A weariness that suggests she's seen too much, lost too much. But probing further feels…wrong. Like violating a sacred space."
+    },
+    {
+      "part": "Inland Empire",
+      "text": "The air thickens. I taste metal. She's a gatekeeper. A guardian of something…important. And I'm not sure I want to know what it is."
+    }
+  ],
+  "dialog": [
+    {
+      "id": "silas_question_2",
+      "text": "What are you guarding?",
+      "skillCheck": {
+        "part": "Volition",
+        "dc": 65
+      }
+    },
+    {
+      "id": "silas_question_3",
+      "text": "Why are you here?",
+      "skillCheck": {
+        "part": "Perception",
+        "dc": 50
+      }
+    }
+  ],
+  "llmLines": [
+    "```json\n{\n  \"monologue\": \"She regards your question with the same glacial indifference she’s displayed thus far. A flicker, almost imperceptible, crosses her face – something akin to…amusement? No. More like the brief, cold spark of a faulty circuit. She exhales, a plume of vapor momentarily obscuring the harsh neon light reflecting in her eyes. \\\"Questions,\\\" she says, her voice a low, dry rustle, \\\"are for the curious. And you, detective…you reek of desperation, not curiosity.\\\"\",\n  \"thoughtCabinet\": [\n    {\n      \"part\": \"Logic\",\n      \"text\": \"She's right, isn't she? This isn't about genuine inquiry. It's about grasping at straws, trying to force a connection where there is none.\"\n    },\n    {\n      \"part\": \"Empathy\",\n      \"text\": \"There's a profound sadness behind her detachment. A weariness that suggests she's seen too much, lost too much. But probing further feels…wrong. Like violating a sacred space.\"\n    },\n    {\n      \"part\": \"Inland Empire\",\n      \"text\": \"The air thickens. I taste metal. She's a gatekeeper. A guardian of something…important. And I'm not sure I want to know what it is.\"\n    }\n  ],\n  \"dialog\": [\n    {\n      \"id\": \"silas_question_2\",\n      \"text\": \"What are you guarding?\",\n      \"skillCheck\": {\n        \"part\": \"Volition\",\n        \"dc\": 65\n      }\n    },\n    {\n      \"id\": \"silas_question_3\",\n      \"text\": \"Why are you here?\",\n      \"skillCheck\": {\n        \"part\": \"Perception\",\n        \"dc\": 50\n      }\n    }\n  ]\n}\n```"
+  ]
+}
+>>> REQUEST: chooseOption {"playerId":"luigi","optionId":"silas_question_2"}
+>>> RESPONSE: {
+  "monologue": "She doesn't react to the question itself, not really. It's the *way* you ask it, the tremor in your voice, the way your eyes dart around the room like a trapped rat. It confirms her initial assessment. You're unraveling. She leans forward, the movement slow, deliberate, like a predator assessing its prey. The neon light catches the sharp angles of her face, highlighting the weariness etched into her features. A faint, almost imperceptible smile plays on her lips – not a smile of amusement, but something colder, something…knowing.",
+  "thoughtCabinet": [
+    {
+      "part": "Logic",
+      "text": "She's playing with you. This isn't about information; it's about breaking you down. About seeing how far you'll bend before you snap."
+    },
+    {
+      "part": "Empathy",
+      "text": "There's a deep well of sadness in her eyes. A history of loss, of betrayal. She's built walls around herself, impenetrable and cold. But beneath the surface…there's something fragile."
+    },
+    {
+      "part": "Inland Empire",
+      "text": "The air thickens. I taste metal. She knows something you don't. Something about this case…something about *you*."
+    }
+  ],
+  "dialog": [
+    {
+      "id": "silas_response_2a",
+      "text": "“You want to know why I’m here? You think a few polite inquiries will unlock the secrets of this city?”",
+      "skillCheck": {
+        "part": "Authority",
+        "dc": 65
+      }
+    },
+    {
+      "id": "silas_response_2b",
+      "text": "“Let’s just say… I’m a collector. Of debts. And information. And sometimes… people.”",
+      "skillCheck": {
+        "part": "Perception",
+        "dc": 50
+      }
+    }
+  ],
+  "llmLines": [
+    "```json\n{\n  \"monologue\": \"She doesn't react to the question itself, not really. It's the *way* you ask it, the tremor in your voice, the way your eyes dart around the room like a trapped rat. It confirms her initial assessment. You're unraveling. She leans forward, the movement slow, deliberate, like a predator assessing its prey. The neon light catches the sharp angles of her face, highlighting the weariness etched into her features. A faint, almost imperceptible smile plays on her lips – not a smile of amusement, but something colder, something…knowing.\",\n  \"thoughtCabinet\": [\n    {\n      \"part\": \"Logic\",\n      \"text\": \"She's playing with you. This isn't about information; it's about breaking you down. About seeing how far you'll bend before you snap.\"\n    },\n    {\n      \"part\": \"Empathy\",\n      \"text\": \"There's a deep well of sadness in her eyes. A history of loss, of betrayal. She's built walls around herself, impenetrable and cold. But beneath the surface…there's something fragile.\"\n    },\n    {\n      \"part\": \"Inland Empire\",\n      \"text\": \"The air thickens. I taste metal. She knows something you don't. Something about this case…something about *you*.\"\n    }\n  ],\n  \"dialog\": [\n    {\n      \"id\": \"silas_response_2a\",\n      \"text\": \"“You want to know why I’m here? You think a few polite inquiries will unlock the secrets of this city?”\",\n      \"skillCheck\": {\n        \"part\": \"Authority\",\n        \"dc\": 65\n      }\n    },\n    {\n      \"id\": \"silas_response_2b\",\n      \"text\": \"“Let’s just say… I’m a collector. Of debts. And information. And sometimes… people.”\",\n      \"skillCheck\": {\n        \"part\": \"Perception\",\n        \"dc\": 50\n      }\n    }\n  ]\n}\n```"
+  ]
+}
+>>> REQUEST: chooseOption {"playerId":"luigi","optionId":"silas_response_2a"}

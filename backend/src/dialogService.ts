@@ -1,8 +1,8 @@
 import { LLMClient } from './llmClient';
-import { PlayerHistoryStore } from '../playerHistoryStore';
+import { PlayerHistoryStore } from './playerHistoryStore';
 import { parseLlmSceneResponse } from './parseLlmJson';
 import { getSceneResponseJsonSchemaString } from './getSceneResponseJsonSchemaString';
-import { PromptBuilder } from '../PromptBuilder';
+import { PromptBuilder } from './PromptBuilder';
 
 
 export class DialogService {

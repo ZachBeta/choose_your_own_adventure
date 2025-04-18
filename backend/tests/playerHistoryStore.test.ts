@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { PlayerHistoryStore } from '../playerHistoryStore';
+import { PlayerHistoryStore } from '../src/playerHistoryStore';
 
 describe('PlayerHistoryStore', () => {
   let store: PlayerHistoryStore;

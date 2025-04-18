@@ -7,8 +7,9 @@ import { InputStrategy, UserInputStrategy, LuigiInputStrategy } from '../src/inp
 const prompt = promptSync({ sigint: true })
 const args = process.argv.slice(2)
 const isLuigi = args.includes('--mario-party-luigi') || args.includes('--luigi')
+const isDebug = args.includes('--debug')
 
-async function main() {
+async function main(debug = false) {
   let player: string, scene: string
   let inputStrategy: InputStrategy
   if (isLuigi) {
@@ -21,13 +22,13 @@ async function main() {
     scene  = prompt('Scene ID:  ') || 'scene_intro'
     inputStrategy = new UserInputStrategy(prompt)
   }
-  const svc = new DialogService({ llm: new LLMClient() })
+  const svc = new DialogService({ llm: new LLMClient(), debug })
   let res = await svc.startScene({ playerId: player, sceneId: scene })
-  await loop(res, svc, player, inputStrategy)
+  await loop(res, svc, player, inputStrategy, debug)
 }
 
-async function loop(res: any, svc: DialogService, player: string, inputStrategy: InputStrategy) {
-  if (isLuigi) {
+async function loop(res: any, svc: DialogService, player: string, inputStrategy: InputStrategy, debug = false) {
+  if (debug) {
     console.log('>>> RESPONSE:', JSON.stringify(res, null, 2))
   }
   console.log('\n📜', res.monologue)
@@ -42,7 +43,7 @@ async function loop(res: any, svc: DialogService, player: string, inputStrategy:
     console.log('>>> REQUEST: chooseOption', { playerId: player, optionId: opt.id })
   }
   res = await svc.chooseOption({ playerId: player, optionId: opt.id })
-  await loop(res, svc, player, inputStrategy)
+  await loop(res, svc, player, inputStrategy, debug)
 }
 
-main().catch(e => console.error(e))
+main(isDebug).catch(e => console.error(e))

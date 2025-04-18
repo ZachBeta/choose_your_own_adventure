@@ -3,13 +3,20 @@ import promptSync from 'prompt-sync'
 import { DialogService } from '../src/dialogService'
 import { LLMClient } from '../src/llmClient'
 import { InputStrategy, UserInputStrategy, LuigiInputStrategy } from '../src/inputStrategy'
+import fs from 'fs';
 
 const prompt = promptSync({ sigint: true })
 const args = process.argv.slice(2)
 const isLuigi = args.includes('--mario-party-luigi') || args.includes('--luigi')
-const isDebug = args.includes('--debug')
 
-async function main(debug = false) {
+// Set up timestamped log file
+const logFileName = `playthru-${new Date().toISOString().replace(/:/g, '-')}.log`;
+const logStream = fs.createWriteStream(logFileName, { flags: 'a' });
+function logToFile(...args: any[]) {
+  logStream.write(args.map(String).join(' ') + '\n');
+}
+
+async function main() {
   let player: string, scene: string
   let inputStrategy: InputStrategy
   if (isLuigi) {
@@ -22,15 +29,15 @@ async function main(debug = false) {
     scene  = prompt('Scene ID:  ') || 'scene_intro'
     inputStrategy = new UserInputStrategy(prompt)
   }
-  const svc = new DialogService({ llm: new LLMClient(), debug })
-  let res = await svc.startScene({ playerId: player, sceneId: scene })
-  await loop(res, svc, player, inputStrategy, debug)
+  const svc = new DialogService({ llm: new LLMClient() });
+  let res = await svc.startScene({ playerId: player, sceneId: scene });
+  await loop(res, svc, player, inputStrategy);
+  logStream.end(); // Close log file at end
 }
 
-async function loop(res: any, svc: DialogService, player: string, inputStrategy: InputStrategy, debug = false) {
-  if (debug) {
-    console.log('>>> RESPONSE:', JSON.stringify(res, null, 2))
-  }
+async function loop(res: any, svc: DialogService, player: string, inputStrategy: InputStrategy) {
+  // No debug, log only to file if needed
+  logToFile('>>> RESPONSE:', JSON.stringify(res, null, 2));
   console.log('\n📜', res.monologue)
 
   if (res.thoughtCabinet && res.thoughtCabinet.length > 0) {
@@ -56,9 +63,14 @@ async function loop(res: any, svc: DialogService, player: string, inputStrategy:
   if (!opt) return console.log('invalid choice')
   if (isLuigi) {
     console.log('>>> REQUEST: chooseOption', { playerId: player, optionId: opt.id })
+    logToFile('>>> REQUEST: chooseOption', JSON.stringify({ playerId: player, optionId: opt.id }));
   }
   res = await svc.chooseOption({ playerId: player, optionId: opt.id })
-  await loop(res, svc, player, inputStrategy, debug)
+  await loop(res, svc, player, inputStrategy)
 }
 
-main(isDebug).catch(e => console.error(e))
+main().catch(e => {
+  logToFile('ERROR:', e);
+  logStream.end();
+  console.error(e);
+});

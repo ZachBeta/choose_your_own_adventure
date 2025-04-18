@@ -32,8 +32,23 @@ async function loop(res: any, svc: DialogService, player: string, inputStrategy:
     console.log('>>> RESPONSE:', JSON.stringify(res, null, 2))
   }
   console.log('\n📜', res.monologue)
+
+  if (res.thoughtCabinet && res.thoughtCabinet.length > 0) {
+    console.log('\n🧠 Thought Cabinet:')
+    res.thoughtCabinet.forEach((t: any, i: number) => {
+      // If t has part and text fields, print both
+      if (t.part && t.text) {
+        console.log(`  [${i}] ${t.part}: ${t.text}`)
+      } else {
+        // fallback for unknown structure
+        console.log(`  [${i}]`, t)
+      }
+    })
+  }
+
+  console.log('\n💬 Dialog Options:')
   res.dialog.forEach((o: any, i: number) =>
-    console.log(`  [${i}] ${o.text}${o.skillCheck ? ' (DC=' + o.skillCheck.dc + ')' : ''}`)
+    console.log(`  [${i}] ${o.text}${o.skillCheck ? ' (' + o.skillCheck.part + 'DC=' + o.skillCheck.dc + ')' : ''}`)
   )
   if (!res.dialog.length) return console.log('=== end ===')
   const idx = await inputStrategy.chooseDialogOption(res.dialog)

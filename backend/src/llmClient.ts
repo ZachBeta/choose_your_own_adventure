@@ -8,6 +8,13 @@ try {
   OPENROUTER_API_KEY = undefined;
 }
 
+import fs from 'fs';
+const llmLogFile = `llm-${new Date().toISOString().replace(/:/g, '-')}.log`;
+const llmLogStream = fs.createWriteStream(llmLogFile, { flags: 'a' });
+function logLLMEvent(...args: any[]) {
+  llmLogStream.write(args.map(String).join(' ') + '\n');
+}
+
 export class LLMClient {
   model: string;
   endpoint: string;
@@ -29,7 +36,7 @@ export class LLMClient {
   }
 
   async generate(prompt: string): Promise<string> {
-    // console.log(">>> prompt:", prompt);
+    logLLMEvent('>>> LLM PROMPT:', prompt);
     const body = OPENROUTER_API_KEY
       ? JSON.stringify({
           model: this.model,
@@ -42,18 +49,26 @@ export class LLMClient {
           stream: false,
           temperature: 0
         });
-    const res = await fetch(this.endpoint, {
-      method: 'POST',
-      headers: this.headers,
-      body,
-    });
-
-    // console.log("<<< response status:", res.status);
-    if (!res.ok) throw new Error(`LLM error: ${res.statusText}`);
-    const data = await res.json();
+    let response: string;
     if (OPENROUTER_API_KEY) {
-      return data.choices?.[0]?.message?.content || '';
+      const res = await fetch(this.endpoint, {
+        method: 'POST',
+        headers: this.headers,
+        body,
+      });
+      const json = await res.json();
+      response = json.choices[0]?.message?.content || '';
+    } else {
+      const res = await fetch(this.endpoint, {
+        method: 'POST',
+        headers: this.headers,
+        body,
+      });
+      const json = await res.json();
+      response = json.response || '';
     }
-    return data.response || '';
+
+    logLLMEvent('<<< LLM RESPONSE:', response);
+    return response;
   }
 }

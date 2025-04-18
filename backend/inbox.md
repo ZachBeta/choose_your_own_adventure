@@ -1,3 +1,7 @@
+* have another display in the game that shows a summary of the history of the player
+
+
+
 * matrix style display of response coming in to the cli, muted green on black
 
 

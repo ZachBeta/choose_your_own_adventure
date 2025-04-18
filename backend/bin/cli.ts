@@ -15,6 +15,7 @@ async function main() {
 }
 
 async function loop(res: any, svc: DialogService, player: string) {
+  console.log(JSON.stringify(res))
   console.log('\n📜', res.monologue)
   res.dialog.forEach((o: any, i: number) =>
     console.log(`  [${i}] ${o.text}${o.skillCheck ? ' (DC=' + o.skillCheck.dc + ')' : ''}`)

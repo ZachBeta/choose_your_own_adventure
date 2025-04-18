@@ -46,9 +46,31 @@ export class DialogService {
     if (!state) throw new Error(`Unknown player ${playerId}`);
     const prefix = state.promptPrefix;
 
-    const prompt = `You are an AI game master with ${prefix}. The player history: ${JSON.stringify(
-      state.history
-    )}. The player chose option "${optionId}". Respond in strict JSON with these fields:`;
-    // ... rest of the method remains the same ...
+    const prompt = `You are an AI game master with ${prefix}. The player history: ${JSON.stringify(state.history)}. The player chose option "${optionId}". Respond in strict JSON with these fields:`;
+    const llmText = await this.llm.generate(prompt);
+    // extract raw JSON string
+    const jsonMatch = llmText.match(/\{[\s\S]*\}/);
+    const jsonString = jsonMatch ? jsonMatch[0] : llmText;
+    let structured: any;
+    try {
+      structured = JSON.parse(jsonString);
+    } catch (e) {
+      throw new Error('LLM did not return valid JSON for chooseOption');
+    }
+    // update history
+    state.history.push({ optionId, result: structured.skillCheckResult });
+    return {
+      monologue: structured.monologue,
+      thoughtCabinet: structured.thoughtCabinet,
+      dialog: structured.dialog,
+      skillCheckResult: structured.skillCheckResult ?? undefined,
+      llmLines: [jsonString]
+    };
+  }
+
+  getPlayerState({ playerId }: { playerId: string }) {
+    const state = this.playerStates.get(playerId);
+    if (!state) throw new Error(`Unknown player ${playerId}`);
+    return { history: state.history };
   }
 }

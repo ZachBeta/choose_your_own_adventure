@@ -1,3 +1,4 @@
+* write logs to all backend logs directory
 * organize our docs with an agent
 * graph database for RAG explanation
 

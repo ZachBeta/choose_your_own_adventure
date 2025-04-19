@@ -5,6 +5,8 @@ import { getSceneResponseJsonSchemaString } from './getSceneResponseJsonSchemaSt
 import { PromptBuilder } from './PromptBuilder';
 
 
+import { logInfo, logError, logDebug } from './logger';
+
 export class DialogService {
   llm: LLMClient;
   debug: boolean;
@@ -22,6 +24,7 @@ export class DialogService {
     this.debug = debug;
     this.playerStates = new Map();
     this.playerHistoryStore = new PlayerHistoryStore();
+    logDebug(`Initialized DialogService with llm: ${llm} and debug: ${debug}`);
   }
 
   async startScene({ playerId, sceneId }: { playerId: string; sceneId: string }) {
@@ -44,13 +47,9 @@ Scene context:
 Player has just entered scene "${sceneId}".
 
 Do not include any explanation or extra text. Only output valid JSON.`;
-    if (this.debug) {
-      console.log('>>> PROMPT:', prompt);
-    }
+    logInfo(`Generated prompt for player ${playerId} and scene ${sceneId}:`, prompt);
     const llmText = await this.llm.generate(prompt);
-    if (this.debug) {
-      console.log('>>> LLM RESPONSE:', llmText);
-    }
+    logInfo(`Received LLM response for player ${playerId} and scene ${sceneId}:`, llmText);
     const structured = parseLlmSceneResponse(llmText);
     return {
       monologue: structured.monologue,
@@ -62,7 +61,10 @@ Do not include any explanation or extra text. Only output valid JSON.`;
 
   async chooseOption({ playerId, optionId }: { playerId: string; optionId: string }) {
     const state = this.playerStates.get(playerId);
-    if (!state) throw new Error(`Unknown player ${playerId}`);
+    if (!state) {
+      logError(`Unknown player ${playerId}`);
+      throw new Error(`Unknown player ${playerId}`);
+    }
     const prefix = state.promptPrefix;
 
     const ctx = {
@@ -72,13 +74,9 @@ Do not include any explanation or extra text. Only output valid JSON.`;
       schemaString: getSceneResponseJsonSchemaString()
     };
     const prompt = this.promptBuilder.buildPrompt(ctx);
-    if (this.debug) {
-      console.log('>>> PROMPT:', prompt);
-    }
+    logInfo(`Generated prompt for player ${playerId} and option ${optionId}:`, prompt);
     const llmText = await this.llm.generate(prompt);
-    if (this.debug) {
-      console.log('>>> LLM RESPONSE:', llmText);
-    }
+    logInfo(`Received LLM response for player ${playerId} and option ${optionId}:`, llmText);
     const structured = parseLlmSceneResponse(llmText);
     // update server-side history
     // Attempt to get scene name from structured or state if available, fallback to empty string

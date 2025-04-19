@@ -12,11 +12,8 @@ if (!OPENROUTER_API_KEY) {
 }
 
 import fs from 'fs';
-const llmLogFile = `llm-${new Date().toISOString().replace(/:/g, '-')}.log`;
-const llmLogStream = fs.createWriteStream(llmLogFile, { flags: 'a' });
-function logLLMEvent(...args: any[]) {
-  llmLogStream.write(args.map(String).join(' ') + '\n');
-}
+import { logInfo } from './logger';
+
 
 export class LLMClient {
   model: string;
@@ -39,7 +36,7 @@ export class LLMClient {
   }
 
   async generate(prompt: string): Promise<string> {
-    logLLMEvent('>>> LLM PROMPT:', prompt);
+    logInfo('>>> LLM PROMPT:', prompt);
     const body = OPENROUTER_API_KEY
       ? JSON.stringify({
           model: this.model,
@@ -71,7 +68,7 @@ export class LLMClient {
       response = json.response || '';
     }
 
-    logLLMEvent('<<< LLM RESPONSE:', response);
+    logInfo('<<< LLM RESPONSE:', response);
     return response;
   }
 }

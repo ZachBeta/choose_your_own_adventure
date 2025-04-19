@@ -1,11 +1,14 @@
 import fetch from 'node-fetch';
 import { execSync } from 'child_process';
 
-let OPENROUTER_API_KEY: string | undefined;
-try {
-  OPENROUTER_API_KEY = execSync('lean_vault get cyoa-gemma3-12b', { encoding: 'utf-8' }).trim() || undefined;
-} catch {
-  OPENROUTER_API_KEY = undefined;
+// Read OpenRouter API key from environment, fallback to Lean Vault
+let OPENROUTER_API_KEY: string | undefined = process.env.OPENROUTER_API_KEY;
+if (!OPENROUTER_API_KEY) {
+  try {
+    OPENROUTER_API_KEY = execSync('lean_vault get cyoa-gemma3-12b', { encoding: 'utf-8' }).trim() || undefined;
+  } catch {
+    OPENROUTER_API_KEY = undefined;
+  }
 }
 
 import fs from 'fs';

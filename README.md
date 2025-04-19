@@ -19,14 +19,7 @@ npm run play
 
 ## Full Stack Web UI (Development)
 
-### One-liner (from project root)
-
-```bash
-npm install        # Installs root, backend, and frontend dependencies
-npm start          # Runs both backend (API) and frontend (UI) together
-```
-- Backend: http://localhost:3000
-- Frontend: http://localhost:5173
+> **Note:** Running both servers from the project root with a single command is not supported at this time. Please use the manual method below.
 
 ### Manual (in separate terminals)
 

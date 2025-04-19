@@ -1,0 +1,88 @@
+openapi: 3.0.3
+info:
+  title: Choose Your Own Adventure API
+  version: 1.0.0
+  description: API contract for frontend/backend integration.
+
+paths:
+  /api/dialog:
+    post:
+      summary: Start a scene or choose a dialog option
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - $ref: '#/components/schemas/StartSceneRequest'
+                - $ref: '#/components/schemas/ChooseOptionRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SceneResponse'
+        '400':
+          description: Bad Request
+
+components:
+  schemas:
+    StartSceneRequest:
+      type: object
+      required:
+        - playerId
+      properties:
+        playerId:
+          type: string
+          example: player_abc123
+        sceneId:
+          type: string
+          description: Optional scene to start
+    ChooseOptionRequest:
+      type: object
+      required:
+        - playerId
+        - optionId
+      properties:
+        playerId:
+          type: string
+        optionId:
+          type: string
+    SceneResponse:
+      type: object
+      properties:
+        monologue:
+          type: string
+        thoughtCabinet:
+          type: array
+          items:
+            $ref: '#/components/schemas/Thought'
+        dialog:
+          type: array
+          items:
+            $ref: '#/components/schemas/DialogOption'
+        skillCheckResult:
+          description: Optional skill check result (type may vary)
+          nullable: true
+    Thought:
+      type: object
+      properties:
+        part:
+          type: string
+        text:
+          type: string
+    DialogOption:
+      type: object
+      properties:
+        id:
+          type: string
+        text:
+          type: string
+        skillCheck:
+          type: object
+          properties:
+            part:
+              type: string
+            dc:
+              type: integer

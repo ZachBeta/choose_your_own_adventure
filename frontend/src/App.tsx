@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Logo from './components/Logo';
-// import ScenePanel from './components/ScenePanel';
+import SubconsciousPanel from './SubconsciousPanel';
+import ConsciousPanel from './ConsciousPanel';
 import { startScene, chooseOption, SceneResponse } from './api';
 
 function randomPlayerId() {
@@ -10,13 +11,13 @@ function randomPlayerId() {
 }
 
 // --- Types ---
-type Option = {
+export type Option = {
   id: string;
   text: string;
   skillCheck?: { part: string; dc: number };
 };
 
-type LogEntry =
+export type LogEntry =
   | { type: 'monologue'; text: string }
   | { type: 'thoughtCabinet'; thoughts: Array<{ part: string; text: string }> }
   | { type: 'playerChoice'; text: string }
@@ -108,108 +109,43 @@ export default function App() {
   };
 
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
-      <div style={{ width: '200px', background: '#f0f0f0', padding: '1rem' }}>
+    <div className="split-container">
+      <div className="panel subconscious-panel">
         <Logo />
-        {loading && (
-          <div style={{ margin: '2rem 0', textAlign: 'center' }}>
-            <span
-              role="img"
-              aria-label="loading"
-              style={{ fontSize: 32, display: 'inline-block', animation: 'spin 1.2s linear infinite' }}
-            >🔄</span>
-          </div>
-        )}
-        <div style={{ marginTop: '2rem' }}>
-          <button onClick={() => setIsLuigiMode((v) => !v)}>
-            {isLuigiMode ? 'Stop Luigi Mode' : 'Start Luigi Mode'}
-          </button>
-        </div>
-        <style>{`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}</style>
+        <SubconsciousPanel history={history} loading={loading} />
       </div>
-      <div style={{ flex: 1, padding: '1rem', display: 'flex', flexDirection: 'column', height: '100vh' }}>
-        {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
-        <div ref={chatRef} style={{ flex: 1, overflowY: 'auto', background: '#181820', padding: '1rem', borderRadius: 12, marginBottom: 12 }}>
-          {history.map((entry, i) => {
-            if (entry.type === 'monologue') {
-              return (
-                <div key={i} style={{ color: '#fff', marginBottom: 8, fontFamily: 'monospace' }}>
-                  <span role="img" aria-label="monologue">📜</span> {entry.text}
-                </div>
-              );
-            }
-            if (entry.type === 'thoughtCabinet') {
-              return (
-                <div key={i} style={{ color: '#00ffff', marginBottom: 8, fontFamily: 'monospace' }}>
-                  <span role="img" aria-label="thought">🧠</span> <b>Thought Cabinet:</b>
-                  <ul style={{ marginLeft: 24 }}>
-                    {entry.thoughts.map((t, j) => (
-                      <li key={j}><b>{t.part}:</b> {t.text}</li>
-                    ))}
-                  </ul>
-                </div>
-              );
-            }
-            if (entry.type === 'playerChoice') {
-              return (
-                <div key={i} style={{ color: '#39FF14', fontWeight: 'bold', marginBottom: 8, fontFamily: 'monospace' }}>
-                  <span role="img" aria-label="choice">💬</span> &gt; {entry.text}
-                </div>
-              );
-            }
-            if (entry.type === 'dialogOptions') {
-              return (
-                <div key={i} style={{ color: '#aaa', marginBottom: 8, fontFamily: 'monospace' }}>
-                  <span role="img" aria-label="options">🕹️</span> <b>Dialog Options:</b>
-                  <ul style={{ marginLeft: 24 }}>
-                    {entry.options.map((opt, j) => (
-                      <li key={opt.id}>
-                        [{j}] {opt.text}
-                        {opt.skillCheck && (
-                          <span style={{ color: '#ff00ff', marginLeft: 8 }}>
-                            ({opt.skillCheck.part}DC={opt.skillCheck.dc})
-                          </span>
-                        )}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              );
-            }
-            return null;
-          })}
-        </div>
-        {scene && scene.dialog.length > 0 && (
-          <div style={{ marginTop: 0 }}>
-            {scene.dialog.map(option => (
-              <button
-                key={option.id}
-                onClick={() => handleChoose(option.id)}
-                style={{
-                  marginRight: 8,
-                  background: '#282838',
-                  color: '#fff',
-                  border: '2px solid #39FF14',
-                  borderRadius: 8,
-                  padding: '0.5rem 1rem',
-                  fontFamily: 'monospace',
-                  fontWeight: 'bold',
-                  cursor: loading || isLuigiMode ? 'not-allowed' : 'pointer',
-                  opacity: loading || isLuigiMode ? 0.5 : 1
-                }}
-                disabled={loading || isLuigiMode}
-              >
-                {option.text}
-              </button>
-            ))}
-          </div>
-        )}
+      <div className="panel conscious-panel">
+        <ConsciousPanel
+          history={history}
+          error={error}
+          chatRef={chatRef}
+          onChoose={handleChoose}
+          loading={loading}
+          isLuigiMode={isLuigiMode}
+          setIsLuigiMode={setIsLuigiMode}
+        />
       </div>
+      <style>{`
+        .split-container {
+          display: flex;
+          height: 100vh;
+        }
+        .panel {
+          flex: 1 1 50%;
+          overflow: auto;
+          display: flex;
+          flex-direction: column;
+        }
+        .subconscious-panel {
+          border-right: 2px solid #222;
+          background: #181818;
+        }
+        .conscious-panel {
+          background: #232323;
+        }
+      `}</style>
     </div>
   );
 }
+
+

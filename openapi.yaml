@@ -25,6 +25,39 @@ paths:
                 $ref: '#/components/schemas/SceneResponse'
         '400':
           description: Bad Request
+  /api/player/state:
+    get:
+      summary: Get player state
+      parameters:
+        - in: query
+          name: playerId
+          schema:
+            type: string
+          required: true
+          description: Player ID
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  history:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        monologue:
+                          type: string
+                        choiceId:
+                          type: string
+                      required:
+                        - monologue
+                required:
+                  - history
+        '404':
+          description: Player not found
 
 components:
   schemas:
@@ -79,6 +112,17 @@ components:
           type: string
         text:
           type: string
+        skillCheck:
+          type: object
+          properties:
+            part:
+              type: string
+            dc:
+              type: number
+          required:
+            - part
+            - dc
+          nullable: true
         skillCheck:
           type: object
           properties:

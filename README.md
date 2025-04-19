@@ -9,12 +9,46 @@ npm install
 npm run play -- --mario-party-luigi
 ```
 
-## Play
+## Play (CLI)
 
 ```bash
 cd backend
 npm install
 npm run play
+```
+
+## Full Stack Web UI (Development)
+
+### One-liner (from project root)
+
+```bash
+npm install        # Installs root, backend, and frontend dependencies
+npm start          # Runs both backend (API) and frontend (UI) together
+```
+- Backend: http://localhost:3000
+- Frontend: http://localhost:5173
+
+### Manual (in separate terminals)
+
+Backend:
+```bash
+cd backend
+npm install
+npm start
+```
+Frontend:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+- Visit http://localhost:5173 in your browser to play.
+
+### API Health Checks
+
+Test backend endpoints directly:
+```bash
+curl -i -X POST http://localhost:3000/api/dialog -H "Content-Type: application/json" -d '{"playerId":"player1","sceneId":"scene_intro"}'
 ```
 
 ## Running Tests
@@ -25,6 +59,8 @@ cd backend
 npm install
 npm test
 ```
+
+---
 
 ## Backend LLM Setup
 

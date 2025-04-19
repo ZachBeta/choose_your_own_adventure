@@ -1,0 +1,10 @@
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #fafaff;
+  color: #212121;
+}
+
+h2, h3 {
+  margin-top: 1.5rem;
+}

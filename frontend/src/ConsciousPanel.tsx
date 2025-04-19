@@ -39,6 +39,20 @@ export default function ConsciousPanel({
               </div>
             );
           }
+          if (entry.type === "thoughtCabinet") {
+            return (
+              <div key={i} style={{ color: "#b3e6ff", background: "#222a35", padding: 8, borderRadius: 8, marginBottom: 8, fontFamily: "monospace" }}>
+                <b>Thought Cabinet:</b>
+                <ul style={{ marginLeft: 20 }}>
+                  {entry.thoughts.map((thought, idx) => (
+                    <li key={idx} style={{ marginBottom: 2 }}>
+                      <span style={{ color: "#7fffd4", fontWeight: "bold" }}>{thought.part}:</span> {thought.text}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            );
+          }
           if (entry.type === "dialogOptions") {
             return (
               <div key={i} style={{ color: "#fff", marginBottom: 8, fontFamily: "monospace" }}>

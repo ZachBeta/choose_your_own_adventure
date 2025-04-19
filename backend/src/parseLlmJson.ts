@@ -22,6 +22,34 @@ export function parseLlmSceneResponse(raw: string) {
       parsed = {};
     }
   }
+  // REPAIR dialog options before validation
+  parsed = repairDialogOptions(parsed);
   // Validate and fill defaults
   return SceneResponseSchema.parse(parsed);
 }
+
+function repairDialogOptions(scene: any) {
+  if (!scene || !Array.isArray(scene.dialog)) return scene;
+  scene.dialog = scene.dialog.map((opt: any, idx: number) => {
+    if (opt.skillCheck) {
+      let repaired = false;
+      let part = opt.skillCheck.part;
+      let dc = opt.skillCheck.dc;
+      if (typeof part !== "string") {
+        part = "...";
+        repaired = true;
+      }
+      if (typeof dc !== "number") {
+        dc = -1;
+        repaired = true;
+      }
+      if (repaired) {
+        console.error("Repaired malformed skillCheck in dialog option", { idx, opt });
+      }
+      return { ...opt, skillCheck: { part, dc } };
+    }
+    return opt;
+  });
+  return scene;
+}
+

@@ -69,6 +69,7 @@ export default function App() {
 
   // Start the scene on mount
   useEffect(() => {
+    console.log("[INIT] Initializing scene for playerId:", playerId);
     setLoading(true);
     apiRequest<SceneResponse>(
       {
@@ -79,8 +80,10 @@ export default function App() {
       addSubconsciousLog
     )
       .then((scene) => {
-        const strictScene = toStrictScene(scene);
-        setHistory(buildLogEntries(scene));
+        console.log("[INIT] Received scene response:", scene);
+        const strictScene = toStrictSceneResponse(scene);
+        setScene(strictScene);
+        setHistory(buildLogEntries(strictScene));
       })
       .catch((e) => {
         setError('Failed to load scene');
@@ -104,6 +107,7 @@ export default function App() {
 
   const handleChoice = async (optionId: string) => {
     if (!scene) return;
+    console.log("[BUTTON] handleChoice called", { optionId });
     setLoading(true);
     setError(null);
     try {
@@ -115,6 +119,7 @@ export default function App() {
         },
         addSubconsciousLog
       );
+      console.log("[BUTTON] Received scene after choice:", nextScene);
       setScene(nextScene);
       setHistory((prev) => [
         ...prev,
@@ -128,6 +133,8 @@ export default function App() {
   };
 
   const handleChoose = (optionId: string) => {
+    console.log("[BUTTON] handleChoose called", { optionId, loading, isLuigiMode });
+    console.log("[DEBUG] scene in handleChoose:", scene);
     if (!loading && !isLuigiMode) {
       handleChoice(optionId);
     }

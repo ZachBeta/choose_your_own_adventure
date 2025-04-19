@@ -55,9 +55,38 @@ Do not include any explanation or extra text. Only output valid JSON.`;
     return {
       monologue: structured.monologue,
       thoughtCabinet: structured.thoughtCabinet,
-      dialog: structured.dialog,
+      dialog: repairDialogOptions(structured.dialog),
       llmLines: [llmText]
     };
+
+// --- Helper for repairing dialog options ---
+function repairDialogOptions(dialog: any[]) {
+  if (!Array.isArray(dialog)) return [];
+  return dialog.map((opt, idx) => {
+    if (opt.skillCheck) {
+      let repaired = false;
+      let part = opt.skillCheck.part;
+      let dc = opt.skillCheck.dc;
+      if (typeof part !== "string") {
+        part = "...";
+        repaired = true;
+      }
+      if (typeof dc !== "number") {
+        dc = "...";
+        repaired = true;
+      }
+      if (repaired) {
+        logError("Repaired malformed skillCheck in dialog option", { idx, opt });
+      }
+      return {
+        ...opt,
+        skillCheck: { part, dc }
+      };
+    }
+    return opt;
+  });
+}
+
   }
 
   async chooseOption({ playerId, optionId }: { playerId: string; optionId: string }) {
@@ -86,10 +115,38 @@ Do not include any explanation or extra text. Only output valid JSON.`;
     return {
       monologue: structured.monologue,
       thoughtCabinet: structured.thoughtCabinet,
-      dialog: structured.dialog,
+      dialog: repairDialogOptions(structured.dialog),
       skillCheckResult: structured.skillCheckResult ?? undefined,
       llmLines: [llmText]
     };
+// --- Helper for repairing dialog options ---
+function repairDialogOptions(dialog: any[]) {
+  if (!Array.isArray(dialog)) return [];
+  return dialog.map((opt, idx) => {
+    if (opt.skillCheck) {
+      let repaired = false;
+      let part = opt.skillCheck.part;
+      let dc = opt.skillCheck.dc;
+      if (typeof part !== "string") {
+        part = "...";
+        repaired = true;
+      }
+      if (typeof dc !== "number") {
+        dc = "...";
+        repaired = true;
+      }
+      if (repaired) {
+        logError("Repaired malformed skillCheck in dialog option", { idx, opt });
+      }
+      return {
+        ...opt,
+        skillCheck: { part, dc }
+      };
+    }
+    return opt;
+  });
+}
+
   }
 
   getPlayerState({ playerId }: { playerId: string }) {

@@ -37,9 +37,15 @@ const dialog = new DialogService({ llm: new LLMClient() })
 app.post('/api/dialog', async (req: Request, res: Response) => {
   try {
     const { playerId, sceneId, optionId } = req.body
-    let out = sceneId
-      ? await dialog.startScene({ playerId, sceneId })
-      : await dialog.chooseOption({ playerId, optionId })
+    let out;
+    if (sceneId) {
+      out = await dialog.startScene({ playerId, sceneId });
+    } else if (optionId) {
+      out = await dialog.chooseOption({ playerId, optionId });
+    } else {
+      // No sceneId or optionId: start a default scene for the player
+      out = await dialog.startScene({ playerId }); // sceneId is now optional
+    }
     res.json(out)
   } catch (e:any) {
     logError('API Error', { endpoint: '/api/dialog', error: e.message });

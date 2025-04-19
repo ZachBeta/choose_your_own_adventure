@@ -123,10 +123,3 @@ components:
             - part
             - dc
           nullable: true
-        skillCheck:
-          type: object
-          properties:
-            part:
-              type: string
-            dc:
-              type: integer

@@ -27,8 +27,9 @@ export class DialogService {
     logDebug(`Initialized DialogService with llm: ${llm} and debug: ${debug}`);
   }
 
-  async startScene({ playerId, sceneId }: { playerId: string; sceneId: string }) {
-    const prefix = this.scenePrompts[sceneId] || this.defaultPromptPrefix;
+  async startScene({ playerId, sceneId }: { playerId: string; sceneId?: string }) {
+    const chosenSceneId = sceneId || 'scene_intro';
+    const prefix = this.scenePrompts[chosenSceneId] || this.defaultPromptPrefix;
     if (!this.playerStates.has(playerId)) {
       this.playerStates.set(playerId, { promptPrefix: prefix });
     } else {

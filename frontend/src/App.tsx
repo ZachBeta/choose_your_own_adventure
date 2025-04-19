@@ -4,8 +4,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import Logo from './components/Logo';
 import SubconsciousPanel from './SubconsciousPanel';
 import ConsciousPanel from './ConsciousPanel';
-import { SceneResponse } from "./types/openapi";
+import { components } from "../../shared/types/openapi";
+type SceneResponse = components["schemas"]["SceneResponse"];
 import { apiRequest } from "./apiClient";
+import { toStrictSceneResponse, StrictSceneResponse } from "./sceneValidation";
 
 function randomPlayerId() {
   return 'player_' + Math.random().toString(36).slice(2, 10);
@@ -49,7 +51,7 @@ export default function App() {
   };
 
   const chatRef = useRef<HTMLDivElement>(null);
-  const [scene, setScene] = useState<SceneResponse | null>(null);
+  const [scene, setScene] = useState<StrictSceneResponse | null>(null);
   const [history, setHistory] = useState<LogEntry[]>([]);
   const [playerId] = useState(() => randomPlayerId());
   const [isLuigiMode, setIsLuigiMode] = useState(false);
@@ -71,13 +73,13 @@ export default function App() {
     apiRequest<SceneResponse>(
       {
         method: "POST",
-        url: "/api/scene",
+        url: "/api/dialog",
         data: { playerId }
       },
       addSubconsciousLog
     )
       .then((scene) => {
-        setScene(scene);
+        const strictScene = toStrictScene(scene);
         setHistory(buildLogEntries(scene));
       })
       .catch((e) => {

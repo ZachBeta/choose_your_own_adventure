@@ -48,7 +48,8 @@ export default function App() {
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
-  }, [history]);
+  }, [history]); // This will trigger autoscroll on every history update, including Luigi mode
+
 
   // Start the scene on mount
   useEffect(() => {
@@ -82,14 +83,15 @@ export default function App() {
     if (!scene) return;
     setLoading(true);
     setError(null);
+    const chosenOption = scene.dialog.find((opt) => opt.id === optionId);
+    const chosenOptionText = chosenOption ? chosenOption.text : '';
+    // Show the player's choice instantly
+    setHistory((prev) => [...prev, { type: 'playerChoice', text: chosenOptionText }]);
     try {
-      const chosenOption = scene.dialog.find((opt) => opt.id === optionId);
-      const chosenOptionText = chosenOption ? chosenOption.text : '';
       const nextScene = await chooseOption(playerId, optionId);
       setScene(nextScene);
       setHistory((prev) => [
         ...prev,
-        { type: 'playerChoice', text: chosenOptionText },
         ...buildLogEntries(nextScene)
       ]);
     } catch (e) {
@@ -109,11 +111,26 @@ export default function App() {
     <div style={{ display: 'flex', height: '100vh' }}>
       <div style={{ width: '200px', background: '#f0f0f0', padding: '1rem' }}>
         <Logo />
+        {loading && (
+          <div style={{ margin: '2rem 0', textAlign: 'center' }}>
+            <span
+              role="img"
+              aria-label="loading"
+              style={{ fontSize: 32, display: 'inline-block', animation: 'spin 1.2s linear infinite' }}
+            >🔄</span>
+          </div>
+        )}
         <div style={{ marginTop: '2rem' }}>
           <button onClick={() => setIsLuigiMode((v) => !v)}>
             {isLuigiMode ? 'Stop Luigi Mode' : 'Start Luigi Mode'}
           </button>
         </div>
+        <style>{`
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `}</style>
       </div>
       <div style={{ flex: 1, padding: '1rem', display: 'flex', flexDirection: 'column', height: '100vh' }}>
         {error && <div style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}

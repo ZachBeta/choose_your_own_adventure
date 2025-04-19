@@ -11,6 +11,7 @@ function randomPlayerId() {
 
 export default function App() {
   const [scene, setScene] = useState<SceneResponse | null>(null);
+  const [history, setHistory] = useState<Array<{ monologue: string; choice?: string }>>([]);
   const [playerId] = useState(() => randomPlayerId());
   const [isLuigiMode, setIsLuigiMode] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,10 @@ export default function App() {
   useEffect(() => {
     setLoading(true);
     startScene(playerId, 'scene_intro')
-      .then(setScene)
+      .then((scene) => {
+        setScene(scene);
+        setHistory([{ monologue: scene.monologue }]);
+      })
       .catch((e) => setError('Failed to load scene: ' + e.message))
       .finally(() => setLoading(false));
     // eslint-disable-next-line
@@ -46,6 +50,14 @@ export default function App() {
     try {
       const nextScene = await chooseOption(playerId, optionId);
       setScene(nextScene);
+      setHistory(prev => {
+        // Attach the chosen option to the last entry
+        const last = prev[prev.length - 1];
+        const chosenOption = scene?.dialog.find(opt => opt.id === optionId)?.text || '';
+        const updated = [...prev.slice(0, -1), { ...last, choice: chosenOption }];
+        // Then add the new monologue
+        return [...updated, { monologue: nextScene.monologue }];
+      });
     } catch (e: any) {
       setError('Failed to choose option: ' + e.message);
     } finally {

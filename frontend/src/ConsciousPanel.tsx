@@ -22,8 +22,7 @@ export default function ConsciousPanel({
 }: ConsciousPanelProps) {
   return (
     <div style={{ padding: "1rem", height: "100vh", display: "flex", flexDirection: "column" }}>
-      <h2 style={{ color: "#fff", fontFamily: "monospace" }}>Conscious</h2>
-      {error && <div style={{ color: "red", marginBottom: "1rem" }}>{error}</div>}
+
       <div ref={chatRef} style={{ flex: 1, overflowY: "auto", background: "#181820", padding: "1rem", borderRadius: 12, marginBottom: 12 }}>
         {history.map((entry, i) => {
           if (entry.type === "monologue") {

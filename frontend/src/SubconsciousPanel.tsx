@@ -1,30 +1,62 @@
-import React from "react";
-import { LogEntry } from "./App";
+import React, { useEffect, useRef, useState } from "react";
+
+type SubconsciousLog = { text: string; isStreaming: boolean; id: string };
 
 type SubconsciousPanelProps = {
-  history: LogEntry[];
-  loading: boolean;
+  logs: SubconsciousLog[];
 };
 
-export default function SubconsciousPanel({ history, loading }: SubconsciousPanelProps) {
+function SubconsciousLogEntry({ log }: { log: SubconsciousLog }) {
+  const [opacity, setOpacity] = useState(1);
+
+  useEffect(() => {
+    if (!log.isStreaming) {
+      const timeout = setTimeout(() => setOpacity(0.15), 2000); // fade after 2s
+      return () => clearTimeout(timeout);
+    } else {
+      setOpacity(1);
+    }
+  }, [log.isStreaming]);
+
+  const isError = log.text.startsWith('API ERROR');
   return (
-    <div style={{ padding: "1rem" }}>
-      <h2 style={{ color: "#00ffff", fontFamily: "monospace" }}>Subconscious</h2>
-      {history
-        .filter((entry) => entry.type === "thoughtCabinet")
-        .map((entry, i) => (
-          <div key={i} style={{ color: "#00ffff", marginBottom: 8, fontFamily: "monospace" }}>
-            <span role="img" aria-label="thought">🧠</span> <b>Thought Cabinet:</b>
-            <ul style={{ marginLeft: 24 }}>
-              {(entry as any).thoughts.map((t: any, j: number) => (
-                <li key={j}>{t.part}: {t.text}</li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      {loading && (
-        <div style={{ color: "#999", marginTop: 16 }}>Thinking...</div>
-      )}
+    <pre
+      style={{
+        transition: "opacity 1.5s",
+        opacity,
+        fontFamily: "monospace",
+        fontSize: "1rem",
+        color: isError ? "#ff4444" : "#00ffff",
+        fontWeight: isError ? "bold" : "normal",
+        textShadow: isError ? "0 0 4px #ff4444" : undefined,
+        background: "transparent",
+        margin: 0,
+        pointerEvents: "none",
+        userSelect: "text",
+        whiteSpace: 'pre-wrap',
+        wordBreak: 'break-word'
+      }}
+    >
+      {log.text}
+    </pre>
+  );
+}
+
+export default function SubconsciousPanel({ logs }: SubconsciousPanelProps) {
+  const endRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (endRef.current) {
+      endRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [logs.length]);
+
+  return (
+    <div style={{ flex: 1, minHeight: 0, overflowY: "auto", position: "relative", padding: "1rem" }}>
+      {logs.map((log) => (
+        <SubconsciousLogEntry key={log.id} log={log} />
+      ))}
+      <div ref={endRef} />
     </div>
   );
 }

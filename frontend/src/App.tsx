@@ -4,7 +4,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import Logo from './components/Logo';
 import SubconsciousPanel from './SubconsciousPanel';
 import ConsciousPanel from './ConsciousPanel';
-import { startScene, chooseOption, SceneResponse } from './api';
+import { SceneResponse } from "./types/openapi";
+import { apiRequest } from "./apiClient";
 
 function randomPlayerId() {
   return 'player_' + Math.random().toString(36).slice(2, 10);
@@ -35,6 +36,18 @@ function buildLogEntries(scene: SceneResponse, lastChoice?: string): LogEntry[] 
 }
 
 export default function App() {
+  // ...existing state...
+  const [subconsciousLogs, setSubconsciousLogs] = useState<
+    { text: string; isStreaming: boolean; id: string }[]
+  >([]);
+
+  const addSubconsciousLog = (text: string, isStreaming: boolean) => {
+    setSubconsciousLogs((logs) => [
+      ...logs,
+      { text, isStreaming, id: Date.now() + Math.random().toString() }
+    ]);
+  };
+
   const chatRef = useRef<HTMLDivElement>(null);
   const [scene, setScene] = useState<SceneResponse | null>(null);
   const [history, setHistory] = useState<LogEntry[]>([]);
@@ -55,7 +68,14 @@ export default function App() {
   // Start the scene on mount
   useEffect(() => {
     setLoading(true);
-    startScene(playerId)
+    apiRequest<SceneResponse>(
+      {
+        method: "POST",
+        url: "/api/scene",
+        data: { playerId }
+      },
+      addSubconsciousLog
+    )
       .then((scene) => {
         setScene(scene);
         setHistory(buildLogEntries(scene));
@@ -84,12 +104,15 @@ export default function App() {
     if (!scene) return;
     setLoading(true);
     setError(null);
-    const chosenOption = scene.dialog.find((opt) => opt.id === optionId);
-    const chosenOptionText = chosenOption ? chosenOption.text : '';
-    // Show the player's choice instantly
-    setHistory((prev) => [...prev, { type: 'playerChoice', text: chosenOptionText }]);
     try {
-      const nextScene = await chooseOption(playerId, optionId);
+      const nextScene = await apiRequest<SceneResponse>(
+        {
+          method: "POST",
+          url: "/api/dialog",
+          data: { playerId, optionId }
+        },
+        addSubconsciousLog
+      );
       setScene(nextScene);
       setHistory((prev) => [
         ...prev,
@@ -111,10 +134,11 @@ export default function App() {
   return (
     <div className="split-container">
       <div className="panel subconscious-panel">
-        <Logo />
-        <SubconsciousPanel history={history} loading={loading} />
+        <div className="panel-header subconscious-header">Subconscious</div>
+        <SubconsciousPanel logs={subconsciousLogs} />
       </div>
       <div className="panel conscious-panel">
+        <div className="panel-header conscious-header">Conscious</div>
         <ConsciousPanel
           history={history}
           error={error}
@@ -135,13 +159,27 @@ export default function App() {
           overflow: auto;
           display: flex;
           flex-direction: column;
+          height: 100%;
+          padding: 1.5rem 1.5rem 1rem 1.5rem;
         }
         .subconscious-panel {
-          border-right: 2px solid #222;
-          background: #181818;
+          background: #141f2b;
         }
         .conscious-panel {
-          background: #232323;
+          background: #21142b;
+        }
+        .panel-header {
+          font-family: monospace;
+          font-size: 1.5rem;
+          margin-bottom: 1rem;
+          font-weight: bold;
+          letter-spacing: 0.04em;
+        }
+        .subconscious-header {
+          color: #00ffff;
+        }
+        .conscious-header {
+          color: #ff66cc;
         }
       `}</style>
     </div>

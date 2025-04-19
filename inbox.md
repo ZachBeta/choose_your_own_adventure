@@ -1,3 +1,5 @@
+* create a favicon of some sort of neon d20 in svg with various neon colors for each vertex
+
 * write logs to all backend logs directory
 * organize our docs with an agent
     * docs is organized

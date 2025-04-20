@@ -35,3 +35,4 @@ export function logError(message: any, ...args: any[]) {
 export function logDebug(message: any, ...args: any[]) {
   writeLog(formatMessage('DEBUG', message, ...args), false);
 }
+

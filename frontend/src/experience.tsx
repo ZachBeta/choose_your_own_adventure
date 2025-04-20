@@ -7,9 +7,7 @@ import './styles/global.css';
 
 function App() {
   return (
-    <React.StrictMode>
-      <ExperiencePage />
-    </React.StrictMode>
+    <ExperiencePage />
   );
 }
 

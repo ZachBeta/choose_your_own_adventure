@@ -258,9 +258,6 @@ input, button, textarea, select {
 .terminal-panel {
   flex: 1 1 50%;
   overflow: auto;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
   padding: 1.5rem;
   border-right: 1px solid var(--terminal-border);
 }
@@ -277,47 +274,127 @@ input, button, textarea, select {
   background: var(--terminal-subconscious-bg);
 }
 
-.terminal-panel-header {
-  font-family: var(--font-terminal);
+/* Conscious Content */
+.conscious-content {
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.conscious-content section {
+  margin-bottom: 1rem;
+}
+
+.terminal-header {
+  color: var(--terminal-accent);
   font-size: 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  font-family: var(--font-terminal);
+}
+
+/* Sensory Details */
+.sense-item {
+  padding: 1rem;
+  border: 1px solid var(--terminal-text);
+  margin-bottom: 1rem;
+  background: rgba(0, 255, 0, 0.05);
+}
+
+.sense-name {
+  color: var(--terminal-accent);
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  font-family: var(--font-terminal);
+}
+
+.sense-detail {
+  color: var(--terminal-text);
+  line-height: 1.4;
+}
+
+/* Internal Voices */
+.voice-item {
+  padding: 1rem;
+  border: 1px solid var(--terminal-text);
+  margin-bottom: 1rem;
+  background: rgba(0, 255, 0, 0.05);
+}
+
+.voice-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.voice-part {
+  color: var(--terminal-accent);
   font-weight: bold;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  animation: terminalGlow 2s infinite;
 }
 
-.conscious-terminal-header {
-  color: var(--terminal-conscious-header);
+.voice-strength {
+  color: var(--terminal-highlight);
 }
 
-.subconscious-terminal-header {
-  color: var(--terminal-subconscious-header);
+.voice-dialogue {
+  color: var(--terminal-text);
+  line-height: 1.4;
 }
 
-/* Add hover effects to panels */
-.terminal-panel {
-  transition: all 0.3s ease;
+/* Choices */
+.choice-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
-.terminal-panel:hover {
-  box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.1);
+.choice-button {
+  width: 100%;
+  text-align: left;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-/* Ensure scrollbars match the terminal theme */
-.terminal-panel::-webkit-scrollbar {
-  width: 8px;
-  background: rgba(0, 0, 0, 0.2);
+.choice-action {
+  font-size: 1.1rem;
+  color: var(--terminal-text);
 }
 
-.terminal-panel::-webkit-scrollbar-thumb {
-  background: var(--terminal-border);
-  border-radius: 4px;
+.choice-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: var(--terminal-accent);
 }
 
-.terminal-panel::-webkit-scrollbar-thumb:hover {
-  background: var(--terminal-hover);
+.choice-difficulty {
+  color: var(--terminal-highlight);
 }
+
+/* Animations */
+.animate-panel {
+  opacity: 0;
+  animation: slideIn 0.5s ease-out forwards;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Add animation delays for sequential appearance */
+.animate-panel:nth-child(1) { animation-delay: 0s; }
+.animate-panel:nth-child(2) { animation-delay: 0.2s; }
+.animate-panel:nth-child(3) { animation-delay: 0.4s; }
+.animate-panel:nth-child(4) { animation-delay: 0.6s; }
 
 /* Terminal Log Styles */
 .terminal-log-container {

@@ -1,20 +1,52 @@
+/// <reference types="vite/client" />
 import { ExperienceRequest } from '../types/experience';
 
+interface ImportMetaEnv {
+  VITE_API_URL: string;
+}
+
+interface ImportMeta {
+  readonly env: ImportMetaEnv;
+}
+
+const API_BASE = import.meta.env.VITE_API_URL || '';
+
 export const createExperienceStream = () => {
-  const controller = new AbortController();
+  let currentController: AbortController | null = null;
   
   return {
     stream: async (request: ExperienceRequest) => {
       // Cancel any existing request
-      controller.abort();
+      if (currentController) {
+        currentController.abort();
+      }
       
-      const response = await fetch('/api/experience', {
+      // Create a new controller for this request
+      currentController = new AbortController();
+      
+      const url = `${API_BASE}/api/experience`;
+      console.log('Making request to:', url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(request)
+      });
+      
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(request),
-        signal: controller.signal,
+        signal: currentController.signal,
+      });
+      
+      console.log('Response:', {
+        ok: response.ok,
+        status: response.status,
+        statusText: response.statusText,
+        url: response.url
       });
       
       if (!response.ok) {
@@ -28,10 +60,10 @@ export const createExperienceStream = () => {
       
       return {
         reader,
-        cancel: () => controller.abort(),
+        cancel: () => currentController?.abort(),
       };
     },
     
-    cancel: () => controller.abort(),
+    cancel: () => currentController?.abort(),
   };
 }; 

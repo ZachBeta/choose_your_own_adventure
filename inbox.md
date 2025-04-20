@@ -1,3 +1,11 @@
+
+
+
+* subconscious streaming should not have any carriage returns, and just be a wall of text that scrolls past, no blinking
+
+* on page load, have "wake up" displayed as an option to kick off the first real request
+
+
 * create a favicon of some sort of neon d20 in svg with various neon colors for each vertex
 
 * write logs to all backend logs directory

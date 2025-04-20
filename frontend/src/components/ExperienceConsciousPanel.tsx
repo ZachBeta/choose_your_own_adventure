@@ -61,7 +61,7 @@ export function ExperienceConsciousPanel({ currentNode, onChoose, loading, chatR
               key={index}
               onClick={() => onChoose(choice.action)}
               disabled={loading}
-              variant={index === 0 ? 'accent' : 'primary'}
+              variant="primary"
               className="choice-button"
             >
               <span className="choice-action">{choice.action}</span>

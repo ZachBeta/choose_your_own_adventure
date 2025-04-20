@@ -415,26 +415,14 @@ input, button, textarea, select {
   padding: 0.25rem 0;
   white-space: pre-wrap;
   word-break: break-word;
-  transition: all 0.3s ease;
+  transition: opacity 1s ease-in-out;
 }
 
 .terminal-log-error {
   color: var(--terminal-error);
   font-weight: bold;
-  text-shadow: 0 0 4px var(--terminal-error);
 }
 
 .terminal-log-streaming {
-  animation: terminalGlow 2s infinite;
-}
-
-/* Add a typing cursor effect for streaming logs */
-.terminal-log-streaming::after {
-  content: '_';
-  animation: blink 1s step-end infinite;
-}
-
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+  opacity: 1;
 } 

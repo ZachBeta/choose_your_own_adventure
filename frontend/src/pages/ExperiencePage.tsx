@@ -20,26 +20,60 @@ export function ExperiencePage() {
   const [loading, setLoading] = useState(false);
   const [subconsciousLogs, setSubconsciousLogs] = useState<Array<{text: string, isStreaming: boolean, id: string}>>([]);
   const [isAwake, setIsAwake] = useState(false);
+  const [currentStreamingContent, setCurrentStreamingContent] = useState('');
+  const currentStreamingId = useRef<string | null>(null);
   
   const chatRef = useRef<HTMLDivElement>(null);
   const experienceStream = React.useMemo(() => createExperienceStream(), []);
   const requestIdRef = useRef(0);
 
   const addSubconsciousLog = (text: string, isStreaming: boolean = true) => {
-    setSubconsciousLogs(logs => [...logs, {
-      text,
-      isStreaming,
-      id: `${Date.now()}-${Math.random()}`
-    }]);
+    const processedText = text
+      .replace(/\r/g, '')
+      .replace(/\n+/g, ' ')
+      .replace(/^Streaming: /, '');
+
+    if (isStreaming) {
+      // If we're streaming, update or create the streaming entry
+      setCurrentStreamingContent(prev => prev + processedText);
+      if (!currentStreamingId.current) {
+        currentStreamingId.current = `${Date.now()}-${Math.random()}`;
+        setSubconsciousLogs(logs => [...logs, {
+          text: processedText,
+          isStreaming: true,
+          id: currentStreamingId.current!
+        }]);
+      } else {
+        // Update the existing streaming entry
+        setSubconsciousLogs(logs => logs.map(log => 
+          log.id === currentStreamingId.current
+            ? { ...log, text: log.text + processedText }
+            : log
+        ));
+      }
+    } else {
+      // For non-streaming logs, create a new entry and reset streaming state
+      currentStreamingId.current = null;
+      setCurrentStreamingContent('');
+      setSubconsciousLogs(logs => [...logs, {
+        text: processedText,
+        isStreaming: false,
+        id: `${Date.now()}-${Math.random()}`
+      }]);
+    }
   };
 
   const fetchNextNode = async (selectedAction?: string) => {
     console.log('fetchNextNode called with:', { selectedAction });
     const currentRequestId = ++requestIdRef.current;
     setLoading(true);
+    
+    // Reset streaming state for new request
+    currentStreamingId.current = null;
+    setCurrentStreamingContent('');
 
     try {
-      addSubconsciousLog(`Request: ${JSON.stringify({ selectedAction })}`);
+      addSubconsciousLog(`Request: ${JSON.stringify({ selectedAction })}`, true);
       
       console.log('About to call experienceStream.stream');
       const { reader, cancel } = await experienceStream.stream({ selectedAction });
@@ -79,7 +113,7 @@ export function ExperiencePage() {
                 break;
               
               case 'chunk':
-                addSubconsciousLog(`Streaming: ${data.content}`, true);
+                addSubconsciousLog(data.content, true);
                 break;
               
               case 'complete':

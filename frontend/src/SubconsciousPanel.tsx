@@ -22,9 +22,18 @@ function SubconsciousLogEntry({ log }: { log: SubconsciousLog }) {
   const isError = log.text.startsWith('API ERROR');
   return (
     <pre
-      className={`terminal-log ${isError ? 'terminal-log-error' : ''} ${log.isStreaming ? 'terminal-log-streaming' : ''}`}
+      className={`terminal-log ${isError ? 'terminal-log-error' : ''}`}
       style={{
         opacity,
+        transition: 'opacity 1s ease-in-out',
+        fontFamily: 'var(--font-terminal)',
+        fontSize: '1rem',
+        color: 'var(--terminal-text)',
+        background: 'transparent',
+        margin: 0,
+        padding: '0.25rem 0',
+        whiteSpace: 'pre-wrap',
+        wordBreak: 'break-word'
       }}
     >
       {log.text}

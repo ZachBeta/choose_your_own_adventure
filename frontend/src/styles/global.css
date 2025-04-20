@@ -1,0 +1,363 @@
+/* Terminal font stack and colors */
+:root {
+  --font-terminal: "Fira Mono", "Consolas", "Monaco", monospace;
+  
+  /* Base Colors */
+  --terminal-bg: var(--color-background);
+  --terminal-text: var(--color-foreground);
+  --terminal-header: var(--color-highlight);
+  --terminal-accent: var(--color-accent);
+  
+  /* Status Colors */
+  --terminal-info: var(--color-blue);
+  --terminal-error: var(--color-red);
+  --terminal-warning: var(--color-yellow);
+  --terminal-special: var(--color-magenta);
+  
+  /* UI States */
+  --terminal-border: var(--color-border);
+  --terminal-hover: var(--color-hover);
+  --terminal-focus: var(--color-focus);
+  --terminal-disabled: var(--color-disabled);
+  
+  /* Panel Colors */
+  --terminal-conscious-bg: var(--color-conscious);
+  --terminal-subconscious-bg: var(--color-subconscious);
+  
+  /* Color Definitions */
+  --color-background: #181818;
+  --color-foreground: #00FF00;
+  --color-highlight: #39FF14;
+  --color-accent: #FFBF00;
+  --color-blue: #00FFFF;
+  --color-red: #FF5555;
+  --color-yellow: #FFFF55;
+  --color-magenta: #FF55FF;
+  --color-white: #F8F8F2;
+  --color-lowlight: #44475A;
+  --color-conscious: #21142b;
+  --color-subconscious: #141f2b;
+  --color-hover: #004400;
+  --color-focus: #006600;
+  --color-border: #333333;
+  --color-disabled: #2a2a2a;
+}
+
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-terminal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: var(--terminal-bg);
+  color: var(--terminal-text);
+  -webkit-text-size-adjust: 100%;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Form elements inherit terminal font */
+input, button, textarea, select {
+  font-family: var(--font-terminal);
+}
+
+/* Terminal animations */
+@keyframes typewriter {
+  from { 
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes terminalGlow {
+  0% { text-shadow: 0 0 5px currentColor; }
+  50% { text-shadow: 0 0 10px currentColor; }
+  100% { text-shadow: 0 0 5px currentColor; }
+}
+
+/* Accessibility - Reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Terminal Container Styles */
+.terminal-container {
+  background-color: var(--terminal-bg);
+  border: 1px solid var(--terminal-border);
+  border-radius: 4px;
+  padding: 1.5rem;
+  margin: 1rem;
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+  overflow: hidden;
+}
+
+.terminal-section {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border: 1px solid var(--terminal-border);
+  border-radius: 4px;
+  background-color: rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.3s ease-out;
+}
+
+.terminal-header {
+  color: var(--terminal-header);
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: bold;
+  animation: terminalGlow 2s infinite;
+}
+
+.terminal-text {
+  color: var(--terminal-text);
+  line-height: 1.6;
+  animation: typewriter 0.5s ease-out;
+  white-space: pre-wrap;
+}
+
+.terminal-card-text {
+  color: var(--terminal-text);
+  padding: 0.5rem;
+  border: 1px solid var(--terminal-border);
+  border-radius: 2px;
+  margin: 0.5rem 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  transition: all 0.2s ease;
+}
+
+.terminal-card-text:hover {
+  background-color: var(--terminal-hover);
+  transform: translateX(4px);
+}
+
+.terminal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.terminal-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.terminal-choices {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.terminal-choice-button {
+  background-color: transparent;
+  color: var(--terminal-text);
+  border: 1px solid var(--terminal-text);
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  font-size: 1rem;
+  border-radius: 2px;
+  position: relative;
+}
+
+.terminal-choice-button:hover {
+  background-color: var(--terminal-hover);
+  transform: translateX(8px);
+}
+
+.terminal-choice-button:focus {
+  outline: none;
+  background-color: var(--terminal-focus);
+  box-shadow: 0 0 0 2px var(--terminal-text);
+}
+
+.terminal-choice-button::before {
+  content: '>';
+  position: absolute;
+  left: -20px;
+  opacity: 0;
+  transition: all 0.2s ease;
+}
+
+.terminal-choice-button:hover::before {
+  opacity: 1;
+  left: 8px;
+}
+
+.animate-panel {
+  opacity: 0;
+  animation: slideIn 0.5s ease-out forwards;
+}
+
+/* Add animation delays for sequential appearance */
+.animate-panel:nth-child(1) { animation-delay: 0s; }
+.animate-panel:nth-child(2) { animation-delay: 0.2s; }
+.animate-panel:nth-child(3) { animation-delay: 0.4s; }
+.animate-panel:nth-child(4) { animation-delay: 0.6s; }
+
+/* Terminal Split Layout */
+.terminal-split-container {
+  display: flex;
+  height: 100vh;
+  background-color: var(--terminal-bg);
+}
+
+.terminal-panel {
+  flex: 1 1 50%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.5rem;
+  border-right: 1px solid var(--terminal-border);
+}
+
+.terminal-panel:last-child {
+  border-right: none;
+}
+
+.conscious-terminal-panel {
+  background: var(--terminal-conscious-bg);
+}
+
+.subconscious-terminal-panel {
+  background: var(--terminal-subconscious-bg);
+}
+
+.terminal-panel-header {
+  font-family: var(--font-terminal);
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  animation: terminalGlow 2s infinite;
+}
+
+.conscious-terminal-header {
+  color: var(--terminal-conscious-header);
+}
+
+.subconscious-terminal-header {
+  color: var(--terminal-subconscious-header);
+}
+
+/* Add hover effects to panels */
+.terminal-panel {
+  transition: all 0.3s ease;
+}
+
+.terminal-panel:hover {
+  box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.1);
+}
+
+/* Ensure scrollbars match the terminal theme */
+.terminal-panel::-webkit-scrollbar {
+  width: 8px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.terminal-panel::-webkit-scrollbar-thumb {
+  background: var(--terminal-border);
+  border-radius: 4px;
+}
+
+.terminal-panel::-webkit-scrollbar-thumb:hover {
+  background: var(--terminal-hover);
+}
+
+/* Terminal Log Styles */
+.terminal-log-container {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  position: relative;
+  padding: 1rem;
+  background: var(--terminal-subconscious);
+}
+
+.terminal-log {
+  font-family: var(--font-terminal);
+  font-size: 1rem;
+  color: var(--terminal-log);
+  background: transparent;
+  margin: 0;
+  padding: 0.25rem 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  transition: all 0.3s ease;
+}
+
+.terminal-log-error {
+  color: var(--terminal-error);
+  font-weight: bold;
+  text-shadow: 0 0 4px var(--terminal-error);
+}
+
+.terminal-log-streaming {
+  animation: terminalGlow 2s infinite;
+}
+
+/* Add a typing cursor effect for streaming logs */
+.terminal-log-streaming::after {
+  content: '_';
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+} 

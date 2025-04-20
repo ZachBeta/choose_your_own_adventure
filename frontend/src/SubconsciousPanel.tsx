@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { COLOR_PALETTE } from "./colorPalette";
 
 type SubconsciousLog = { text: string; isStreaming: boolean; id: string };
 
@@ -21,20 +22,9 @@ function SubconsciousLogEntry({ log }: { log: SubconsciousLog }) {
   const isError = log.text.startsWith('API ERROR');
   return (
     <pre
+      className={`terminal-log ${isError ? 'terminal-log-error' : ''} ${log.isStreaming ? 'terminal-log-streaming' : ''}`}
       style={{
-        transition: "opacity 1.5s",
         opacity,
-        fontFamily: "monospace",
-        fontSize: "1rem",
-        color: isError ? "#ff4444" : "#00ffff",
-        fontWeight: isError ? "bold" : "normal",
-        textShadow: isError ? "0 0 4px #ff4444" : undefined,
-        background: "transparent",
-        margin: 0,
-        pointerEvents: "none",
-        userSelect: "text",
-        whiteSpace: 'pre-wrap',
-        wordBreak: 'break-word'
       }}
     >
       {log.text}
@@ -52,7 +42,7 @@ export default function SubconsciousPanel({ logs }: SubconsciousPanelProps) {
   }, [logs.length]);
 
   return (
-    <div style={{ flex: 1, minHeight: 0, overflowY: "auto", position: "relative", padding: "1rem" }}>
+    <div className="terminal-log-container">
       {logs.map((log) => (
         <SubconsciousLogEntry key={log.id} log={log} />
       ))}

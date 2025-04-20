@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-
-import { resolve } from 'path';
+import path from 'path';
 
 export default defineConfig({
   plugins: [react()],
@@ -12,8 +11,11 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        main: resolve(__dirname, 'public/index.html'),
-        colors: resolve(__dirname, 'colors.html'),
+        main: path.resolve('./index.html'),
+        colors: path.resolve('./colors.html'),
+        experience: path.resolve('./experience.html'),
+        styleguide: path.resolve('./styleguide.html'),
+        subconsciousStyleguide: path.resolve('./subconscious-styleguide.html'),
       },
     },
   },

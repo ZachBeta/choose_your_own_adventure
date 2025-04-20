@@ -1,6 +1,3 @@
-# notes:
-# we can remove monologue, thought cabinet (voices is what we'll refer to it from here on), dialogue will become "choices"
-#senses, voices, choices
 openapi: 3.0.3
 info:
   title: Choose Your Own Adventure API

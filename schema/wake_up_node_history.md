@@ -34,6 +34,8 @@ Each node in the experience tree represents a moment in the narrative, whether i
 }
 ```
 
+note: love this
+
 ## Wake Up Sequence
 
 The character creation process begins with the "wake up" sequence - a series of internal dialogue nodes that establish the character's dominant voices/archetypes.
@@ -90,6 +92,8 @@ The character creation process begins with the "wake up" sequence - a series of 
 }
 ```
 
+note: this should be generated fresh every new game - maybe use scene ID if we want to cache things
+
 Each choice during the wake-up sequence:
 1. Strengthens the associated voice
 2. Leads to a new node with more internal dialogue
@@ -125,6 +129,8 @@ The player's history is a record of their journey through the experience tree:
 }
 ```
 
+so it sounds like this is a concrete and separate thing from the existing structure, I think maybe we don't use this yet
+
 ## Memory Export/Import
 
 Players can export their state as a `memories.json` file with the following structure:
@@ -157,6 +163,8 @@ Players can export their state as a `memories.json` file with the following stru
 }
 ```
 
+note: skip for now
+
 ## Context Window
 
 For narrative continuity, the game maintains a sliding context window of recent nodes:
@@ -176,6 +184,8 @@ For narrative continuity, the game maintains a sliding context window of recent 
 }
 ```
 
+note: I think we just keep a simple log of nodes, in the future we can store/query them, but for now a rolling window of 10 or so nodes, we can pick a better window size after some experiments
+
 ## Voice/Part Types
 
 The standard voice/part types include:
@@ -188,3 +198,5 @@ The standard voice/part types include:
 - **Trickster**: Playful, unpredictable, enjoys chaos
 
 Additional voices can be added as needed for specific narrative contexts. 
+
+note: we don't need to be prescriptive here, it will emerge "organically"

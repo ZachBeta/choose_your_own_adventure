@@ -5,6 +5,7 @@ import { HistoryEntryStorage } from './storage/HistoryEntryStorage';
 import { v4 as uuidv4 } from 'uuid';
 import { logger } from '../utils/logger';
 import { LLMClient } from '../llmClient';
+import { ExperienceNodeParser } from '../experience/experienceNodeParser';
 
 export class ExperienceService {
   constructor(
@@ -13,8 +14,10 @@ export class ExperienceService {
     private experiencePrompt: ExperiencePrompt
   ) {}
   
-  async generateNextExperience(selectedAction: string | null): Promise<ExperienceNode> {
-    // Build prompt using both storage services
+  async generateNextExperience(
+    selectedAction: string | null,
+    streamHandler?: (chunk: string) => void
+  ): Promise<ExperienceNode> {
     const prompt = await this.experiencePrompt.buildPrompt(
       this.nodeStorage,
       this.historyStorage,
@@ -22,10 +25,8 @@ export class ExperienceService {
     );
     
     try {
-      // Generate new node using prompt...
-      const newNode = await this.generateNode(prompt);
+      const newNode = await this.generateNode(prompt, streamHandler);
       
-      // Store the new node
       await this.nodeStorage.store(newNode.id, newNode);
       
       if (selectedAction !== null) {
@@ -42,37 +43,26 @@ export class ExperienceService {
     }
   }
 
-  private async generateNode(choice: string): Promise<ExperienceNode> {
-    // use experiencePrompt to generate a node
-    const built_prompt = await this.experiencePrompt.buildPrompt(this.nodeStorage, this.historyStorage, choice);
-
-    // TODO: Implement actual node generation using LLM
+  private async generateNode(
+    prompt: string,
+    streamHandler?: (chunk: string) => void
+  ): Promise<ExperienceNode> {
     const llm = new LLMClient();
-    const node = await llm.generate(built_prompt);
-    // This is a placeholder that should be replaced with actual implementation
-    return ExperienceNodeParser.parse(node);
-  }
-} 
+    let fullResponse = '';
 
-class ExperienceNodeParser {
-  static parse(node: string): ExperienceNode {
-    const parsed = JSON.parse(node);
+    if (streamHandler) {
+      // Use streaming if handler provided
+      for await (const chunk of llm.generateWithStream(prompt)) {
+        fullResponse += chunk;
+        streamHandler(chunk);
+      }
+    } else {
+      // Fall back to non-streaming if no handler
+      fullResponse = await llm.generate(prompt);
+    }
+
     return {
-      id: uuidv4(),
-      scene: parsed.scene || "...",
-      senses: parsed.senses || {
-        visual: null,
-        auditory: null,
-        tactile: null,
-        olfactory: null,
-        taste: null
-      },
-      voices: parsed.voices || [],
-      choices: parsed.choices || [{
-        action: "...",
-        difficulty: "...",
-        dominantVoice: "..."
-      }]
+      ...ExperienceNodeParser.parse(fullResponse)
     };
   }
 }

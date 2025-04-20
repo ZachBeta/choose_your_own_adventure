@@ -19,13 +19,34 @@ const experienceService = new ExperienceService(
 );
 
 router.post('/experience', async (req, res) => {
+  // Set headers for SSE
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+
   try {
     const request: ExperienceRequest = req.body;
-    const nextNode = await experienceService.generateNextExperience(request.selectedAction);
-    res.json(nextNode);
+    
+    // Send initial status
+    res.write(`data: ${JSON.stringify({ type: 'status', status: 'started' })}\n\n`);
+
+    // Create stream handler
+    const streamHandler = (chunk: string) => {
+      res.write(`data: ${JSON.stringify({ type: 'chunk', content: chunk })}\n\n`);
+    };
+
+    const nextNode = await experienceService.generateNextExperience(
+      request.selectedAction,
+      streamHandler
+    );
+
+    // Send final complete node
+    res.write(`data: ${JSON.stringify({ type: 'complete', node: nextNode })}\n\n`);
+    res.end();
   } catch (error) {
     logger.error('Failed to generate next experience:', error);
-    res.status(400).json({ error: 'Failed to generate next experience' });
+    res.write(`data: ${JSON.stringify({ type: 'error', error: 'Failed to generate next experience' })}\n\n`);
+    res.end();
   }
 });
 

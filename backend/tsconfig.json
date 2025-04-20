@@ -10,5 +10,5 @@
     "lib": ["ES2020"],
     "types": ["node"]
   },
-  "include": ["src/**/*"]
+  "include": ["src/**/*", "../shared/types/experience.ts"]
 }

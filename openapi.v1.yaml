@@ -107,12 +107,10 @@ components:
     ExperienceRequest:
       type: object
       properties:
-        history:
-          type: array
-          items:
-            $ref: '#/components/schemas/HistoryEntry'
-          maxItems: 10
-          description: Rolling window of previous experiences (max 10)
+        selectedAction:
+          type: string
+          nullable: true
+          description: The action selected from previous node's choices, null for initial request
 
     HistoryEntry:
       type: object

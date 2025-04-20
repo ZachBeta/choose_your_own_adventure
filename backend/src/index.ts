@@ -4,7 +4,8 @@ import express, { Request, Response } from 'express'
 import cors from 'cors'
 import { DialogService } from './dialogService'
 import { LLMClient } from './llmClient'
-import { logInfo, logError } from './logger';
+import { logInfo, logError } from './logger'
+import experienceRoutes from './experience/experienceRoutes'
 
 const app = express()
 app.use(cors(), express.json())
@@ -31,7 +32,11 @@ app.use((req, res, next) => {
   next();
 });
 
+// Initialize services
 const dialog = new DialogService({ llm: new LLMClient() })
+
+// Mount experience routes
+app.use('/api', experienceRoutes);
 
 // POST /api/dialog  { playerId, sceneId? , optionId? }
 app.post('/api/dialog', async (req: Request, res: Response) => {

@@ -1,11 +1,10 @@
 
 
 
-* subconscious streaming should not have any carriage returns, and just be a wall of text that scrolls past, no blinking
-
+* the gameplay loop is really clunky, can we discuss caching, and start processing each of the next options, and if they request one that's done, it loads quickly, if they request one that's still calculating they can stream it like normal, that may be complicated
+* also on page reload, we can only continue the existing game, we probably need a session or other way to store which player we are using - this will likely require some data model changes that need to be plumbed thru the existing application code 
 
 ---
-
 
 * create a favicon of some sort of neon d20 in svg with various neon colors for each vertex
 

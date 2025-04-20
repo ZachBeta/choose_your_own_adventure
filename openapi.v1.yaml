@@ -1,0 +1,127 @@
+openapi: 3.0.3
+info:
+  title: Choose Your Own Adventure API
+  version: 1.0.0
+  description: API for generating narrative experiences with internal voices and sensory details.
+
+paths:
+  /api/experience:
+    post:
+      summary: Generate next experience node
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExperienceRequest'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExperienceNode'
+        '400':
+          description: Bad Request
+
+components:
+  schemas:
+    ExperienceNode:
+      type: object
+      required:
+        - scene
+        - senses
+        - voices
+        - choices
+      properties:
+        scene:
+          type: string
+          description: Description of the current narrative moment
+          example: "Waking up in a strange, liminal space between consciousness and dreams"
+        senses:
+          type: object
+          properties:
+            visual:
+              type: string
+              nullable: true
+            auditory:
+              type: string
+              nullable: true
+            tactile:
+              type: string
+              nullable: true
+            olfactory:
+              type: string
+              nullable: true
+            taste:
+              type: string
+              nullable: true
+          description: Sensory details of the current moment
+        voices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Voice'
+          minItems: 1
+          description: Internal voices commenting on the situation
+        choices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Choice'
+          minItems: 1
+          description: Available actions for the player
+
+    Voice:
+      type: object
+      required:
+        - part
+        - strength
+        - dialogue
+      properties:
+        part:
+          type: string
+          example: "Protector"
+        strength:
+          type: string
+          example: "Urgent"
+        dialogue:
+          type: string
+          example: "Careful now. We need to assess the situation."
+
+    Choice:
+      type: object
+      required:
+        - action
+        - difficulty
+        - dominantVoice
+      properties:
+        action:
+          type: string
+          example: "Stay still and observe your surroundings"
+        difficulty:
+          type: string
+          example: "Safe"
+        dominantVoice:
+          type: string
+          example: "Protector"
+
+    ExperienceRequest:
+      type: object
+      properties:
+        history:
+          type: array
+          items:
+            $ref: '#/components/schemas/HistoryEntry'
+          maxItems: 10
+          description: Rolling window of previous experiences (max 10)
+
+    HistoryEntry:
+      type: object
+      required:
+        - node
+        - selectedAction
+      properties:
+        node:
+          $ref: '#/components/schemas/ExperienceNode'
+        selectedAction:
+          type: string
+          description: The action that was selected from the choices 

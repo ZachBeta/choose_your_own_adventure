@@ -6,6 +6,7 @@ import { DialogService } from './dialogService'
 import { LLMClient } from './llmClient'
 import { logInfo, logError } from './logger'
 import experienceRoutes from './experience/experienceRoutes'
+import sharedExperienceRoutes from './experience/sharedExperienceRoutes'
 
 const app = express()
 app.use(cors(), express.json())
@@ -37,6 +38,7 @@ const dialog = new DialogService({ llm: new LLMClient() })
 
 // Mount experience routes
 app.use('/api', experienceRoutes);
+app.use('/api/shared-experience', sharedExperienceRoutes);
 
 // POST /api/dialog  { playerId, sceneId? , optionId? }
 app.post('/api/dialog', async (req: Request, res: Response) => {

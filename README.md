@@ -26,20 +26,24 @@ Once you have your bot token, add it to a `.env` file in your project root as:
 DISCORD_BOT_TOKEN=your_token_here
 ```
 
-### (Optional) Find Your Discord Channel ID
+### (Optional) Find Your Discord Channel IDs
 
-To configure the bot to target a specific channel, you may need the channel's unique ID:
+You may want to configure the bot to use different channels for gameplay and debugging. To do so, you need each channel's unique ID:
 
 1. In Discord, go to User Settings > Advanced and enable "Developer Mode".
 2. Right-click on the channel you want to use.
 3. Click "Copy Channel ID".
-4. Add it to your `.env` file as:
+4. Add them to your `.env` file as:
 
 ```env
-DISCORD_CHANNEL_ID=your_channel_id_here
+DISCORD_CHANNEL_ID=your_gameplay_channel_id
+DISCORD_DEBUG_CHANNEL_ID=your_debug_channel_id
 ```
 
-You can now use this variable in your code to specify where the bot should listen or send messages.
+- `DISCORD_CHANNEL_ID` is for the main gameplay channel.
+- `DISCORD_DEBUG_CHANNEL_ID` is for a dedicated debug/logging channel.
+
+You can now use these variables in your code to specify where the bot should listen, send messages, or log debug output.
 
 Continue with installation and running the bot as described below.
 

@@ -1,0 +1,103 @@
+openapi: 3.0.0
+info:
+  title: Shared Experience API
+  version: 1.0.0
+paths:
+  /api/shared-experience:
+    post:
+      summary: Submit or advance a shared experience for a group (channel/thread) in Discord.
+      description: |
+        Handles group-based narrative state for a Discord channel or thread. 
+        Accepts user actions, resolves group state, and returns the current scene and choices for the group.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SharedExperienceRequest'
+      responses:
+        '200':
+          description: The current state of the shared experience for the group.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SharedExperienceResponse'
+        '400':
+          description: Invalid request or action.
+components:
+  schemas:
+    SharedExperienceRequest:
+      type: object
+      required:
+        - channel_id
+        - channel_name
+        - user_id
+        - user_name
+      properties:
+        channel_id:
+          type: string
+          description: Discord channel ID (required).
+        channel_name:
+          type: string
+          description: Name of the Discord channel.
+        thread_id:
+          type: string
+          description: Discord thread ID (optional, for thread-based experiences).
+        thread_name:
+          type: string
+          description: Name of the Discord thread (if applicable).
+        user_id:
+          type: string
+          description: Discord user ID of the sender.
+        user_name:
+          type: string
+          description: Discord username of the sender.
+        action:
+          type: string
+          description: The choice, command, or action taken by the user (optional on initial scene load).
+        content:
+          type: string
+          description: Raw message content from Discord (optional, for context).
+    SharedExperienceResponse:
+      type: object
+      required:
+        - scene
+        - choices
+        - participants
+        - history
+      properties:
+        scene:
+          type: string
+          description: Narrative text for the group.
+        choices:
+          type: array
+          description: Choices available to the group.
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Unique identifier for the choice.
+              text:
+                type: string
+                description: Text describing the choice.
+        participants:
+          type: array
+          description: List of participating user IDs or names.
+          items:
+            type: string
+        history:
+          type: array
+          description: List of previous actions or narrative states in this shared experience.
+          items:
+            type: object
+            properties:
+              user_id:
+                type: string
+              user_name:
+                type: string
+              action:
+                type: string
+              timestamp:
+                type: string
+                format: date-time

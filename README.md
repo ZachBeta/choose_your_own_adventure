@@ -1,6 +1,48 @@
 # choose_your_own_adventure
 cyber elysium, disco punk
 
+## Discord Bot Setup
+
+To run the Discord bot, follow these steps to create and configure your own bot in Discord:
+
+1. Go to the [Discord Developer Portal](https://discord.com/developers/applications)
+2. Click "New Application" and give it a name
+3. Go to the "Bot" section and click "Add Bot"
+4. Scroll to privileged gateway intents
+    - Enable all 3 toggles: Presence, Server Members, Message Content
+5. Reset token and copy it
+6. In Developer Portal, go to OAuth2 > URL Generator
+    - Select "bot" under scopes
+    - Select needed permissions:
+        - Send Messages
+        - Send Messages in Threads
+        - Read Message History
+7. Discord admin can use the generated URL to invite the bot to your server
+8. Confirm by going to server settings > Apps/Integrations > Bots & Apps
+
+Once you have your bot token, add it to a `.env` file in your project root as:
+
+```env
+DISCORD_BOT_TOKEN=your_token_here
+```
+
+### (Optional) Find Your Discord Channel ID
+
+To configure the bot to target a specific channel, you may need the channel's unique ID:
+
+1. In Discord, go to User Settings > Advanced and enable "Developer Mode".
+2. Right-click on the channel you want to use.
+3. Click "Copy Channel ID".
+4. Add it to your `.env` file as:
+
+```env
+DISCORD_CHANNEL_ID=your_channel_id_here
+```
+
+You can now use this variable in your code to specify where the bot should listen or send messages.
+
+Continue with installation and running the bot as described below.
+
 ## Watch Luigi win by doing nothing
 
 ```bash

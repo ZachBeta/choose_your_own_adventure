@@ -46,6 +46,26 @@ client.on(Events.MessageCreate, async (message: Message) => {
   if (message.author.bot) return;
 
   // Prepare SharedExperienceRequest context
+  // const mentionRegex = /<@!?\d+>/g;
+  // const contentWithUsername = message.content.replace(
+  //   mentionRegex,
+  //   mention => `${mention} ${message.author.username}`
+  // );
+
+  // // Strip off the mention when parsing a choice
+  // const withoutMention = contentWithUsername.replace(mentionRegex, '').trim();
+  // let action: string | undefined;
+  // const numMatch = withoutMention.match(/^(\d+)$/);
+  // if (numMatch) {
+  //   action = `choice_${numMatch[1]}`;
+  // } else if (/^choice_(\d+)$/i.test(withoutMention)) {
+  //   action = withoutMention.toLowerCase();
+  // } else if (/^explore$/i.test(withoutMention)) {
+  //   action = 'choice_1';
+  // }
+  const action = message.content; // pass thru directly for now, we can fill in the mentioned username later
+
+  // Build the request with injected mention+username
   const sharedExperienceRequest: SharedExperienceRequest = {
     user_id: message.author.id,
     user_name: message.author.username,
@@ -53,7 +73,7 @@ client.on(Events.MessageCreate, async (message: Message) => {
     channel_name: message.channel.isDMBased() ? 'DM' : (message.channel as any).name,
     thread_id: message.channel.isThread() ? message.channel.id : undefined,
     thread_name: message.channel.isThread() ? message.channel.name : undefined,
-    action: undefined, // You can parse a command/choice here if needed
+    action,
     content: message.content,
   };
 

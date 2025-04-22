@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 import { SharedExperienceRequest, SharedExperienceResponse } from '../../../shared/types/sharedExperience';
 import { ExperienceNodeStorage } from '../services/storage/ExperienceNodeStorage';
 import { HistoryEntryStorage } from '../services/storage/HistoryEntryStorage';
-import { ExperiencePrompt } from './experiencePrompt';
+import { SharedExperiencePrompt } from './SharedExperiencePrompt';
 import { SharedExperienceService } from '../services/SharedExperienceService';
 
 const router = Router();
@@ -10,8 +10,8 @@ const router = Router();
 // Initialize service and storage
 const nodeStorage = new ExperienceNodeStorage();
 const historyStorage = new HistoryEntryStorage();
-const experiencePrompt = new ExperiencePrompt();
-const sharedService = new SharedExperienceService(nodeStorage, historyStorage, experiencePrompt);
+const sharedPrompt = new SharedExperiencePrompt();
+const sharedService = new SharedExperienceService(nodeStorage, historyStorage, sharedPrompt);
 
 // POST /api/shared-experience
 router.post('/', async (req: Request, res: Response) => {

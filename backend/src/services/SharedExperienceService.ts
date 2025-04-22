@@ -1,35 +1,47 @@
 import { SharedExperienceRequest, SharedExperienceResponse } from '../../../shared/types/sharedExperience';
-import { ExperiencePrompt } from '../experience/experiencePrompt';
+import { SharedExperiencePrompt } from '../experience/SharedExperiencePrompt';
 import { ExperienceNodeStorage } from './storage/ExperienceNodeStorage';
 import { HistoryEntryStorage } from './storage/HistoryEntryStorage';
 import { LLMClient } from '../llmClient';
 import { ExperienceNodeParser } from '../experience/experienceNodeParser';
+import { ExperienceNode } from '../../../shared/types/experience';
 
-// Internal group state representation
-interface GroupState {
+// Group state representation
+export interface GroupState {
   scene: string;
   choices: { id: string; text: string }[];
   participants: Set<string>;
-  history: SharedExperienceResponse['history'];
+  // history: SharedExperienceResponse['history']; // Now handled by storage
 }
 
 export class SharedExperienceService {
   private groupStates = new Map<string, GroupState>();
+  private groupHistoryStorage = new Map<string, import('./storage/SharedHistoryEntryStorage').SharedHistoryEntryStorage>();
+
   constructor(
     private nodeStorage: ExperienceNodeStorage,
-    private historyStorage: HistoryEntryStorage,
-    private experiencePrompt: ExperiencePrompt
+    private historyStorage: HistoryEntryStorage, // legacy, can be removed later
+    private experiencePrompt: SharedExperiencePrompt
   ) {}
 
-  /**
-   * Handles a shared experience request for a group (channel/thread).
-   */
+  private async handleLLMUpdate(state: GroupState, history: { user_name: string; action: string }[]): Promise<void> {
+    const prompt = this.experiencePrompt.buildPrompt(state, history);
+    const llm = new LLMClient();
+    const fullResponse = await llm.generate(prompt);
+    const newNode: ExperienceNode = ExperienceNodeParser.parse(fullResponse);
+    state.scene = newNode.scene;
+    state.choices = newNode.choices.map((c, idx) => ({
+      id: `choice_${idx + 1}`,
+      text: c.action
+    }));
+    await this.nodeStorage.store(newNode.id, newNode);
+  }
+
   async handleRequest(request: SharedExperienceRequest): Promise<SharedExperienceResponse> {
-    // Determine group key (channel or channel:thread)
     const key = request.thread_id
       ? `${request.channel_id}:${request.thread_id}`
       : request.channel_id;
-    // Initialize state if missing
+
     let state = this.groupStates.get(key);
     if (!state) {
       state = {
@@ -41,13 +53,19 @@ export class SharedExperienceService {
           { id: 'choice_2', text: 'Talk to the group' }
         ],
         participants: new Set(),
-        history: []
+        // history: [] // Now handled by storage
       };
       this.groupStates.set(key, state);
     }
-    // Ensure participant is tracked
+
+    // Ensure group history storage exists for this group
+    if (!this.groupHistoryStorage.has(key)) {
+      const { SharedHistoryEntryStorage } = require('./storage/SharedHistoryEntryStorage');
+      this.groupHistoryStorage.set(key, new SharedHistoryEntryStorage());
+    }
+    const historyStorage = this.groupHistoryStorage.get(key)!;
+
     state.participants.add(request.user_id);
-    // Record action if provided
     if (request.action) {
       const entry = {
         user_id: request.user_id,
@@ -55,16 +73,18 @@ export class SharedExperienceService {
         action: request.action,
         timestamp: new Date().toISOString()
       };
-      state.history.push(entry);
-      // Update scene for now to reflect last action
-      state.scene = `Last action by ${request.user_name}: ${request.action}`;
+      await historyStorage.addEntry(entry);
+      const history = await historyStorage.getAllHistory();
+      await this.handleLLMUpdate(state, history);
     }
-    // Build response from state
+
+    const history = await historyStorage.getAllHistory();
     return {
       scene: state.scene,
       choices: state.choices,
       participants: Array.from(state.participants),
-      history: state.history
+      history
     };
   }
 }
+

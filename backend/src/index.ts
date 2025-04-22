@@ -1,3 +1,6 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
 // Entry point for backend server
 
 import express, { Request, Response } from 'express'

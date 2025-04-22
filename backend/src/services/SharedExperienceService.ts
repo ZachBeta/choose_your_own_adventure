@@ -3,8 +3,8 @@ import { SharedExperiencePrompt } from '../experience/SharedExperiencePrompt';
 import { ExperienceNodeStorage } from './storage/ExperienceNodeStorage';
 import { HistoryEntryStorage } from './storage/HistoryEntryStorage';
 import { LLMClient } from '../llmClient';
-import { ExperienceNodeParser } from '../experience/experienceNodeParser';
 import { ExperienceNode } from '../../../shared/types/experience';
+import { SharedExperienceParser } from '../experience/SharedExperienceParser';
 
 // Group state representation
 export interface GroupState {
@@ -28,13 +28,10 @@ export class SharedExperienceService {
     const prompt = this.experiencePrompt.buildPrompt(state, history);
     const llm = new LLMClient();
     const fullResponse = await llm.generate(prompt);
-    const newNode: ExperienceNode = ExperienceNodeParser.parse(fullResponse);
+    const newNode = SharedExperienceParser.parse(fullResponse);
     state.scene = newNode.scene;
-    state.choices = newNode.choices.map((c, idx) => ({
-      id: `choice_${idx + 1}`,
-      text: c.action
-    }));
-    await this.nodeStorage.store(newNode.id, newNode);
+    state.choices = newNode.choices; // preserve LLM's id and text
+    // Optionally, store node if needed
   }
 
   async handleRequest(request: SharedExperienceRequest): Promise<SharedExperienceResponse> {
@@ -87,4 +84,3 @@ export class SharedExperienceService {
     };
   }
 }
-

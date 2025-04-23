@@ -179,12 +179,18 @@ client.on(Events.MessageCreate, async (message: Message) => {
         throw new Error(`API responded with status ${response.status}`);
       }
       const data = (await response.json()) as SharedExperienceResponse;
-      // Format scene and choices for Discord, and split semantically
+      // Format scene and choices for Discord, only split if combined is too long
       const maxLen = 2000;
       const scene = data.scene || '';
       const choices = (data.choices && data.choices.length > 0)
         ? '**Choices:**\n' + data.choices.map(c => `\`${c.id}\`: ${c.text}`).join('\n')
         : '';
+
+      // Combine scene and choices with spacing
+      let combined = scene;
+      if (choices) {
+        combined = scene ? scene + '\n' + choices : choices;
+      }
 
       // Helper to split long messages at line breaks
       function splitMessage(text: string, maxLength = 2000): string[] {
@@ -204,8 +210,9 @@ client.on(Events.MessageCreate, async (message: Message) => {
         return messages;
       }
 
-      // Send scene first
-      for (const chunk of splitMessage(scene, maxLen)) {
+      // Only split if combined is too long
+      const chunks = splitMessage(combined, maxLen);
+      for (const chunk of chunks) {
         if (message.channel.isThread()) {
           await message.reply(chunk);
         } else if (message.channel.type === ChannelType.GuildText) {
@@ -214,18 +221,7 @@ client.on(Events.MessageCreate, async (message: Message) => {
           await message.reply(chunk);
         }
       }
-      // Then send choices if any
-      if (choices) {
-        for (const chunk of splitMessage(choices, maxLen)) {
-          if (message.channel.isThread()) {
-            await message.reply(chunk);
-          } else if (message.channel.type === ChannelType.GuildText) {
-            await (message.channel as TextChannel).send(chunk);
-          } else {
-            await message.reply(chunk);
-          }
-        }
-      }
+
     } catch (err: any) {
       console.error('Error calling backend API:', err?.message);
       await message.reply('Sorry, there was an error contacting the game server.');

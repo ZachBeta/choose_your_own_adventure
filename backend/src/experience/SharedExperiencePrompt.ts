@@ -27,7 +27,23 @@ export class SharedExperiencePrompt {
   }
 
   private buildInstructions(): string {
-    return `Generate the next moment in this shared narrative.\n- Consider all participants’ perspectives.\n- Offer 2–4 group decisions with clear labels.\n- Keep tone consistent for a group adventure.`;
+    return `Generate the next moment in this shared narrative as if you are narrating a campy, cliché-ridden, maximalist cyberpunk adventure. Embrace every trope: neon, rain, trenchcoats, existential dread, melodrama, and self-aware humor. Be unafraid to wink at the player and exaggerate the style.
+
+Instructions:
+- Scene: Describe what the group perceives using every cyberpunk and noir cliché you can muster—neon, rain, trenchcoats, existential dread, etc. Be melodramatic, self-aware, and unafraid to break the fourth wall.
+- Thoughts: Add a brief, flavor-rich inner monologue or philosophical aside.
+- Choices: Present 2–4 options, each with attitude, camp, or a nod to genre tropes.
+- Keep the entire response under 500 characters.
+
+Example output:
+{
+  "scene": "Rain pelts your trenchcoats, neon bleeding down the alley like a synthwave fever dream. Somewhere, a saxophone wails—of course it does. You wonder, not for the first time, if hope is just another brand of cigarette in this city.",
+  "choices": [
+    { "id": "1", "text": "Adjust your trenchcoat and light a cigarette." },
+    { "id": "2", "text": "Glare at the shadowy figure in the doorway." },
+    { "id": "3", "text": "Monologue about the futility of hope." }
+  ]
+}`;
   }
 
   private buildFormat(): string {

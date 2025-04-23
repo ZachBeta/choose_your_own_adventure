@@ -120,7 +120,7 @@ client.on(Events.MessageCreate, async (message: Message) => {
     else if (message.reference) {
       try {
         const referenced = await message.fetchReference();
-        if (referenced.author?.bot) {
+        if (referenced.author?.bot && referenced.author.id === client.user?.id) {
           shouldRespond = true;
         }
       } catch {}
@@ -130,7 +130,7 @@ client.on(Events.MessageCreate, async (message: Message) => {
       try {
         const thread = message.channel;
         const starter = await thread.fetchStarterMessage();
-        if (starter && starter.author?.bot) {
+        if (starter && starter.author?.bot && starter.author.id === client.user?.id) {
           shouldRespond = true;
         }
       } catch {}

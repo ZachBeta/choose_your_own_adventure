@@ -1,8 +1,73 @@
-import { Client, GatewayIntentBits, Events, Message, Partials, TextChannel, ChannelType, MessageType } from 'discord.js';
+import { Client, GatewayIntentBits, Events, Message, Partials, TextChannel, ChannelType, MessageType, GuildMember } from 'discord.js';
 import dotenv from 'dotenv';
 import fetch from 'node-fetch';
+import fs from 'fs';
 import type { SharedExperienceRequest, SharedExperienceResponse } from '../shared/types/sharedExperience';
 dotenv.config();
+
+// In-memory cache for userId -> displayName
+const mentionDisplayNameCache = new Map<string, string>();
+
+/**
+ * Replaces all Discord user mentions in a message with @displayName or @unknown:USER_ID.
+ * Uses an in-memory cache to minimize API calls.
+ * @param message Discord message
+ * @param cache Map<string, string> for userId -> displayName
+ * @returns The content with mentions replaced
+ */
+export async function replaceMentionsWithDisplayNames(message: Message, cache: Map<string, string>): Promise<string> {
+  // Only process messages from guilds (servers)
+  const guild = message.guild;
+  if (!guild) return message.content;
+
+  // Regex to match <@123> and <@!123>
+  const mentionRegex = /<@!?(\d+)>/g;
+
+  // Gather unique user IDs from the message
+  const userIds = Array.from(message.content.matchAll(mentionRegex)).map(match => match[1]);
+  const uniqueUserIds = Array.from(new Set(userIds));
+
+  // Map userId -> displayName or placeholder
+  const idToDisplayName = new Map<string, string>();
+
+  for (const userId of uniqueUserIds) {
+    // Check cache first
+    if (cache.has(userId)) {
+      idToDisplayName.set(userId, cache.get(userId)!);
+      continue;
+    }
+    // Try to get from guild member cache
+    let member: GuildMember | undefined;
+    try {
+      member = guild.members.cache.get(userId);
+      if (!member) {
+        // Optionally: Uncomment the next line to fetch from API if not cached
+        // member = await guild.members.fetch(userId);
+      }
+    } catch (e) {
+      member = undefined;
+    }
+    let displayName: string;
+    if (member) {
+      displayName = member.displayName || member.user.username;
+      cache.set(userId, displayName);
+    } else {
+      displayName = `unknown:${userId}`;
+    }
+    idToDisplayName.set(userId, displayName);
+  }
+
+  // Replace all mentions in the content
+  const replaced = message.content.replace(mentionRegex, (full, userId) => {
+    const displayName = idToDisplayName.get(userId);
+    if (displayName && !displayName.startsWith('unknown:')) {
+      return `@${displayName}`;
+    } else {
+      return `@unknown:${userId}`;
+    }
+  });
+  return replaced;
+}
 
 const gameplayChannelId = process.env.DISCORD_CHANNEL_ID;
 const debugChannelId = process.env.DISCORD_DEBUG_CHANNEL_ID;
@@ -47,8 +112,7 @@ client.on(Events.MessageCreate, async (message: Message) => {
   // Ignore system messages, only process regular user messages
   if (message.type !== MessageType.Default) return;
 
-  // Prepare SharedExperienceRequest context
-  // const mentionRegex = /<@!?\d+>/g;
+  // Replace all user mentions with display names or @unknown:USER_ID
   // const contentWithUsername = message.content.replace(
   //   mentionRegex,
   //   mention => `${mention} ${message.author.username}`

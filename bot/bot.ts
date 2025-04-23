@@ -116,18 +116,52 @@ client.on(Events.MessageCreate, async (message: Message) => {
         throw new Error(`API responded with status ${response.status}`);
       }
       const data = (await response.json()) as SharedExperienceResponse;
-      // Format scene and choices for Discord
-      let replyText = data.scene;
-      if (data.choices && data.choices.length > 0) {
-        replyText += '\n\n**Choices:**\n' + data.choices.map(c => `\`${c.id}\`: ${c.text}`).join('\n');
+      // Format scene and choices for Discord, and split semantically
+      const maxLen = 2000;
+      const scene = data.scene || '';
+      const choices = (data.choices && data.choices.length > 0)
+        ? '**Choices:**\n' + data.choices.map(c => `\`${c.id}\`: ${c.text}`).join('\n')
+        : '';
+
+      // Helper to split long messages at line breaks
+      function splitMessage(text: string, maxLength = 2000): string[] {
+        if (text.length <= maxLength) return [text];
+        const lines = text.split('\n');
+        const messages = [];
+        let current = '';
+        for (const line of lines) {
+          if ((current + '\n' + line).length > maxLength) {
+            messages.push(current);
+            current = line;
+          } else {
+            current += (current ? '\n' : '') + line;
+          }
+        }
+        if (current) messages.push(current);
+        return messages;
       }
-      if (message.channel.isThread()) {
-        await message.reply(replyText);
-      } else if (message.channel.type === ChannelType.GuildText) {
-        await (message.channel as TextChannel).send(replyText);
-      } else {
-        // Fallback for DMs or other channel types
-        await message.reply(replyText);
+
+      // Send scene first
+      for (const chunk of splitMessage(scene, maxLen)) {
+        if (message.channel.isThread()) {
+          await message.reply(chunk);
+        } else if (message.channel.type === ChannelType.GuildText) {
+          await (message.channel as TextChannel).send(chunk);
+        } else {
+          await message.reply(chunk);
+        }
+      }
+      // Then send choices if any
+      if (choices) {
+        for (const chunk of splitMessage(choices, maxLen)) {
+          if (message.channel.isThread()) {
+            await message.reply(chunk);
+          } else if (message.channel.type === ChannelType.GuildText) {
+            await (message.channel as TextChannel).send(chunk);
+          } else {
+            await message.reply(chunk);
+          }
+        }
       }
     } catch (err: any) {
       console.error('Error calling backend API:', err?.message);

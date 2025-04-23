@@ -44,43 +44,48 @@ client.once(Events.ClientReady, async () => {
 
 client.on(Events.MessageCreate, async (message: Message) => {
   if (message.author.bot) return;
-  // Ignore system messages, only process regular user messages
-  if (message.type !== MessageType.Default) return;
+  // Ignore system-only messages, but allow user messages and replies
+  if (![MessageType.Default, MessageType.Reply].includes(message.type)) return;
 
-  // Only engage in threads started by the bot
-  if (message.channel.isThread()) {
-    const thread = message.channel;
-    try {
-      // Always fetch the starter message (supported in discord.js v14+)
-      const starterMessage = await thread.fetchStarterMessage();
-      if (!starterMessage || !starterMessage.author.bot) {
-        return; // Ignore threads not started by the bot
-      }
-    } catch (err) {
-      // If there's an error fetching, safest is to ignore
-      return;
+  // Respond if: (1) mentioned, (2) reply to a bot, or (3) in a thread started by the bot
+  let shouldRespond = false;
+  try {
+    // (1) Mentioned
+    if (client.user && message.mentions.has(client.user.id)) {
+      shouldRespond = true;
     }
-  }
+    // (2) Reply to a bot message
+    else if (message.reference) {
+      try {
+        const referenced = await message.fetchReference();
+        if (referenced.author?.bot) {
+          shouldRespond = true;
+        }
+      } catch {}
+    }
+    // (3) In a thread started by the bot
+    else if (message.channel.isThread()) {
+      try {
+        const thread = message.channel;
+        const starter = await thread.fetchStarterMessage();
+        if (starter && starter.author?.bot) {
+          shouldRespond = true;
+        }
+      } catch {}
+    }
+  } catch {}
+  if (!shouldRespond) return;
 
   // Prepare SharedExperienceRequest context
-  // const mentionRegex = /<@!?\d+>/g;
-  // const contentWithUsername = message.content.replace(
-  //   mentionRegex,
-  //   mention => `${mention} ${message.author.username}`
-  // );
-
-  // // Strip off the mention when parsing a choice
-  // const withoutMention = contentWithUsername.replace(mentionRegex, '').trim();
-  // let action: string | undefined;
-  // const numMatch = withoutMention.match(/^(\d+)$/);
-  // if (numMatch) {
-  //   action = `choice_${numMatch[1]}`;
-  // } else if (/^choice_(\d+)$/i.test(withoutMention)) {
-  //   action = withoutMention.toLowerCase();
-  // } else if (/^explore$/i.test(withoutMention)) {
-  //   action = 'choice_1';
-  // }
+  // ... (existing comment lines unchanged)
   const action = message.content; // pass thru directly for now, we can fill in the mentioned username later
+
+  // Add a processing emoji reaction before sending to backend
+  try {
+    await message.react('⏳');
+  } catch (err) {
+    // Ignore reaction errors (e.g., lack of permissions)
+  }
 
   // Build the request with injected mention+username
   const sharedExperienceRequest: SharedExperienceRequest = {

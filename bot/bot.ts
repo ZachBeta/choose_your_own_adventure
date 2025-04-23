@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, Events, Message, Partials, TextChannel, ChannelType } from 'discord.js';
+import { Client, GatewayIntentBits, Events, Message, Partials, TextChannel, ChannelType, MessageType } from 'discord.js';
 import dotenv from 'dotenv';
 import fetch from 'node-fetch';
 import type { SharedExperienceRequest, SharedExperienceResponse } from '../shared/types/sharedExperience';
@@ -44,6 +44,8 @@ client.once(Events.ClientReady, async () => {
 
 client.on(Events.MessageCreate, async (message: Message) => {
   if (message.author.bot) return;
+  // Ignore system messages, only process regular user messages
+  if (message.type !== MessageType.Default) return;
 
   // Prepare SharedExperienceRequest context
   // const mentionRegex = /<@!?\d+>/g;
